@@ -13,12 +13,15 @@ class UtilisateurType extends AbstractType
     {
         $builder
             ->add('username')
-            ->add('roles')
             ->add('password')
             ->add('nom')
             ->add('email')
             ->add('telephone')
             ->add('statut')
+            ->add('partenaire',EntityType::class,[
+                'class'=> Partenaire::class,
+                'choice_label'=> 'partenaire_id'
+            ])
         ;
     }
 
