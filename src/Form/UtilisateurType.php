@@ -6,6 +6,9 @@ use App\Entity\Utilisateur;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Entity\Partenaire;
 
 class UtilisateurType extends AbstractType
 {
@@ -20,7 +23,7 @@ class UtilisateurType extends AbstractType
             ->add('statut')
             ->add('partenaire',EntityType::class,[
                 'class'=> Partenaire::class,
-                'choice_label'=> 'raisonsociale'
+                'choice_label'=> 'partenaire_id'
             ])
         ;
     }
