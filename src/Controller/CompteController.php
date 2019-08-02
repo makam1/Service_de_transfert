@@ -1,17 +1,21 @@
 <?php
-
 namespace App\Controller;
-
 use App\Entity\Compte;
 use App\Form\CompteType;
 use App\Repository\CompteRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Repository\PartenaireRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
- * @Route("/compte")
+ * @Route("/api/compte")
+ * @IsGranted("ROLE_ADMIN")
  */
 class CompteController extends AbstractController
 {
@@ -20,34 +24,35 @@ class CompteController extends AbstractController
      */
     public function index(CompteRepository $compteRepository): Response
     {
+
+      
         return $this->render('compte/index.html.twig', [
             'comptes' => $compteRepository->findAll(),
         ]);
     }
-
     /**
-     * @Route("/new", name="compte_new", methods={"GET","POST"})
+     * @Route("/new", name="comptenew", methods={"GET","POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
-    public function new(Request $request): Response
+    public function new(Request $request,SerializerInterface $serializer,EntityManagerInterface $entityManager ): Response
     {
         $compte = new Compte();
-        $form = $this->createForm(CompteType::class, $compte);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
+        $form = $this->createForm(CompteType::class,$compte);
+        $data=json_decode($request->getContent(), true);
+        $form->submit($data);
+        if($form->isSubmitted()){
+            $date=date("Y").date("m").date("d").date("H").date("i").date("s");
+            
+            $compte->setNumerocompte($date);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($compte);
             $entityManager->flush();
-
-            return $this->redirectToRoute('compte_index');
-        }
-
-        return $this->render('compte/new.html.twig', [
-            'compte' => $compte,
-            'form' => $form->createView(),
-        ]);
+        
+        return new Response('Le compte a été ajouté',Response::HTTP_CREATED);
     }
-
+       
+        return new Response('Vous devez renseigner les informations du compte ',Response::HTTP_CREATED );
+    }
     /**
      * @Route("/{id}", name="compte_show", methods={"GET"})
      */
@@ -57,7 +62,6 @@ class CompteController extends AbstractController
             'compte' => $compte,
         ]);
     }
-
     /**
      * @Route("/{id}/edit", name="compte_edit", methods={"GET","POST"})
      */
@@ -65,19 +69,15 @@ class CompteController extends AbstractController
     {
         $form = $this->createForm(CompteType::class, $compte);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
-
             return $this->redirectToRoute('compte_index');
         }
-
         return $this->render('compte/edit.html.twig', [
             'compte' => $compte,
             'form' => $form->createView(),
         ]);
     }
-
     /**
      * @Route("/{id}", name="compte_delete", methods={"DELETE"})
      */
@@ -88,7 +88,6 @@ class CompteController extends AbstractController
             $entityManager->remove($compte);
             $entityManager->flush();
         }
-
         return $this->redirectToRoute('compte_index');
     }
 }

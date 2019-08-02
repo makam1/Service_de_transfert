@@ -6,10 +6,15 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
+
 
 /**
  * @ApiResource()
  * @ORM\Entity(repositoryClass="App\Repository\PartenaireRepository")
+ * @UniqueEntity(fields={"ninea"}, message="Ce ninea existe déjà")
  */
 class Partenaire
 {
@@ -26,7 +31,8 @@ class Partenaire
     private $raisonsociale;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string", length=20, unique=true)
+     * @Assert\Length(min="5")
      */
     private $ninea;
 

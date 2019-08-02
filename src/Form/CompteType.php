@@ -6,6 +6,9 @@ use App\Entity\Compte;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Entity\Partenaire;
 
 class CompteType extends AbstractType
 {
@@ -14,7 +17,10 @@ class CompteType extends AbstractType
         $builder
             ->add('numerocompte')
             ->add('solde')
-            ->add('partenaire')
+            ->add('partenaire',EntityType::class,[
+                'class'=> Partenaire::class,
+                'choice_label'=> 'raisonsociale'
+            ])
         ;
     }
 
