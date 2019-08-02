@@ -56,7 +56,7 @@ class Utilisateur implements UserInterface
     private $statut;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire", inversedBy="utilisateurs")
      */
     private $partenaire;
 
@@ -190,4 +190,5 @@ class Utilisateur implements UserInterface
 
         return $this;
     }
+
 }

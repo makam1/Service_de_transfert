@@ -20,7 +20,7 @@ class UtilisateurType extends AbstractType
             ->add('statut')
             ->add('partenaire',EntityType::class,[
                 'class'=> Partenaire::class,
-                'choice_label'=> 'partenaire_id'
+                'choice_label'=> 'raisonsociale'
             ])
         ;
     }

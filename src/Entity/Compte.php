@@ -31,13 +31,19 @@ class Compte
     private $solde;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Utilisateur")
+     * @ORM\OneToMany(targetEntity="App\Entity\Depot", mappedBy="compte")
      */
-    private $utilisateur;
+    private $depots;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire", inversedBy="comptes")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $partenaire;
 
     public function __construct()
     {
-        $this->utilisateur = new ArrayCollection();
+        $this->depots = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -70,27 +76,44 @@ class Compte
     }
 
     /**
-     * @return Collection|Utilisateur[]
+     * @return Collection|Depot[]
      */
-    public function getUtilisateur(): Collection
+    public function getDepots(): Collection
     {
-        return $this->utilisateur;
+        return $this->depots;
     }
 
-    public function addUtilisateur(Utilisateur $utilisateur): self
+    public function addDepot(Depot $depot): self
     {
-        if (!$this->utilisateur->contains($utilisateur)) {
-            $this->utilisateur[] = $utilisateur;
+        if (!$this->depots->contains($depot)) {
+            $this->depots[] = $depot;
+            $depot->setCompte($this);
         }
 
         return $this;
     }
 
-    public function removeUtilisateur(Utilisateur $utilisateur): self
+    public function removeDepot(Depot $depot): self
     {
-        if ($this->utilisateur->contains($utilisateur)) {
-            $this->utilisateur->removeElement($utilisateur);
+        if ($this->depots->contains($depot)) {
+            $this->depots->removeElement($depot);
+            // set the owning side to null (unless already changed)
+            if ($depot->getCompte() === $this) {
+                $depot->setCompte(null);
+            }
         }
+
+        return $this;
+    }
+
+    public function getPartenaire(): ?Partenaire
+    {
+        return $this->partenaire;
+    }
+
+    public function setPartenaire(?Partenaire $partenaire): self
+    {
+        $this->partenaire = $partenaire;
 
         return $this;
     }

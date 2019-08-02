@@ -29,7 +29,7 @@ class Depot
     private $date;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Compte")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Compte", inversedBy="depots")
      * @ORM\JoinColumn(nullable=false)
      */
     private $compte;

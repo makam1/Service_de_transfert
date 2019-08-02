@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -29,9 +31,25 @@ class Partenaire
     private $ninea;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=20)
      */
     private $adresse;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Utilisateur", mappedBy="partenaire")
+     */
+    private $utilisateurs;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Compte", mappedBy="partenaire")
+     */
+    private $comptes;
+
+    public function __construct()
+    {
+        $this->utilisateurs = new ArrayCollection();
+        $this->comptes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -70,6 +88,68 @@ class Partenaire
     public function setAdresse(string $adresse): self
     {
         $this->adresse = $adresse;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Utilisateur[]
+     */
+    public function getUtilisateurs(): Collection
+    {
+        return $this->utilisateurs;
+    }
+
+    public function addUtilisateur(Utilisateur $utilisateur): self
+    {
+        if (!$this->utilisateurs->contains($utilisateur)) {
+            $this->utilisateurs[] = $utilisateur;
+            $utilisateur->setPartenaire($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUtilisateur(Utilisateur $utilisateur): self
+    {
+        if ($this->utilisateurs->contains($utilisateur)) {
+            $this->utilisateurs->removeElement($utilisateur);
+            // set the owning side to null (unless already changed)
+            if ($utilisateur->getPartenaire() === $this) {
+                $utilisateur->setPartenaire(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Compte[]
+     */
+    public function getComptes(): Collection
+    {
+        return $this->comptes;
+    }
+
+    public function addCompte(Compte $compte): self
+    {
+        if (!$this->comptes->contains($compte)) {
+            $this->comptes[] = $compte;
+            $compte->setPartenaire($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCompte(Compte $compte): self
+    {
+        if ($this->comptes->contains($compte)) {
+            $this->comptes->removeElement($compte);
+            // set the owning side to null (unless already changed)
+            if ($compte->getPartenaire() === $this) {
+                $compte->setPartenaire(null);
+            }
+        }
 
         return $this;
     }
