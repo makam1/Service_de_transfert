@@ -48,58 +48,39 @@ class PartenaireController extends AbstractController
         $partenaire->setNinea($values->ninea);
         $partenaire->setAdresse($values->adresse);
 
-
-
         $compte = new Compte();
         $date=date("Y").date("m").date("d").date("H").date("i").date("s");
         $compte->setNumerocompte($date);
         $compte->setSolde(0);
-
-        // relates this product to the category
         $compte->setPartenaire($partenaire);
 
+       
+        $username = new Utilisateur();
+
+        $username->setNom($values->nom);
+        $username->setUsername($values->username);
+        $username->setEmail($values->email);
+        $username->setTelephone($values->telephone);
+        $username->setStatut("actif");
+        $username->setRoles(["ROLE_SUPERADMIN"]);
+        $username->setPassword($passwordEncoder->encodePassword($username,$values->password));
+        $username->setPartenaire($partenaire);
+
         $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->getDoctrine()->getManager();
+            $errors = $validator->validate($partenaire);
+            if(count($errors)) {
+                $errors = $serializer->serialize($errors, 'json');
+                return new Response($errors, 500, [
+                    'Content-Type' => 'application/json'
+                ]);
+            }
         $entityManager->persist($partenaire);
         $entityManager->persist($compte);
+        $entityManager->persist($username);
         $entityManager->flush();
 
-
-
-        // return new JsonResponse($data, 500);
-
-        // $compte = new Compte();
-        // $date=date("Y").date("m").date("d").date("H").date("i").date("s");
-        // $compte->setNumerocompte($date);
-        // $compte->setSolde(0);
-        // $entityManager = $this->getDoctrine()->getManager();
-        // $entityManager->persist($compte);
-        // $entityManager->flush();
-    //     $partenaire = new Partenaire();
-    //     $form = $this->createForm(PartenaireType::class, $partenaire);
-    //     $data=json_decode($request->getContent(),true);
-    //     $form->submit($data);
-    //     if($form->isSubmitted()){
-    //         $entityManager = $this->getDoctrine()->getManager();
-    //         $errors = $validator->validate($partenaire);
-    //         if(count($errors)) {
-    //             $errors = $serializer->serialize($errors, 'json');
-    //             return new Response($errors, 500, [
-    //                 'Content-Type' => 'application/json'
-    //             ]);
-    //         }
-    //         $entityManager->persist($partenaire);
-    //         $entityManager->flush();
-
-        
-    //          $idpartenaire = $this->getDoctrine()->getRepository(Compte::class)->findAll();
-    //         foreach ($idpartenaire as $key => $value) {
-    //            $id=$value->getId();
-    //         }
-            
-
-
-
-        return new Response('Le partenaire et son compte ont été ajouté',Response::HTTP_CREATED);
+        return new Response("Le partenaire, son compte et l'admin associé et ont été ajouté",Response::HTTP_CREATED);
     
     }
 

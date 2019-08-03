@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ApiResource()
@@ -20,6 +22,7 @@ class Depot
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\Range(min="75000")
      */
     private $montant;
 
