@@ -52,6 +52,8 @@ class SecurityController extends AbstractController
         'message' => 'Vous devez renseigner les informations de l\'admin'
     ];
     return new JsonResponse($data, 500);
+
+
     }
      
    /**

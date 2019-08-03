@@ -34,7 +34,7 @@ class CompteController extends AbstractController
      * @Route("/new", name="comptenew", methods={"GET","POST"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function new(Request $request,SerializerInterface $serializer,EntityManagerInterface $entityManager ): Response
+    public function ajout(Request $request,SerializerInterface $serializer,EntityManagerInterface $entityManager ): Response
     {
         $compte = new Compte();
         $form = $this->createForm(CompteType::class,$compte);
@@ -42,8 +42,8 @@ class CompteController extends AbstractController
         $form->submit($data);
         if($form->isSubmitted()){
             $date=date("Y").date("m").date("d").date("H").date("i").date("s");
-            
             $compte->setNumerocompte($date);
+            $compte->setSolde(5000);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($compte);
             $entityManager->flush();

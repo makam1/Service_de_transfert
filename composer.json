@@ -22,6 +22,8 @@
         "symfony/yaml": "4.3.*"
     },
     "require-dev": {
+        "symfony/browser-kit": "4.3.*",
+        "symfony/css-selector": "4.3.*",
         "symfony/web-server-bundle": "4.3.*"
     },
     "config": {
