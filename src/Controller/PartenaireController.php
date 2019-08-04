@@ -42,6 +42,9 @@ class PartenaireController extends AbstractController
      */
     public function new(Request $request,UserPasswordEncoderInterface $passwordEncoder,SerializerInterface $serializer,EntityManagerInterface $entityManager, ValidatorInterface $validator ): Response
     {
+
+        $content='Content-Type';
+        $appli='application/json';
         $values=json_decode($request->getContent());
         $partenaire = new Partenaire();
         $partenaire->setRaisonsociale($values->raisonsociale);
@@ -72,7 +75,22 @@ class PartenaireController extends AbstractController
             if(count($errors)) {
                 $errors = $serializer->serialize($errors, 'json');
                 return new Response($errors, 500, [
-                    'Content-Type' => 'application/json'
+                    $content =>  $appli
+                ]);
+            }
+            $errors1 = $validator->validate($username);
+            if(count($errors1)) {
+                $errors1 = $serializer->serialize($errors1, 'json');
+                return new Response($errors1, 500, [
+                    $content =>  $appli
+                ]);
+            }
+
+            $errors2 = $validator->validate($compte);
+            if(count($errors2)) {
+                $errors2 = $serializer->serialize($errors2, 'json');
+                return new Response($errors2, 500, [
+                    $content =>  $appli
                 ]);
             }
         $entityManager->persist($partenaire);
@@ -111,18 +129,5 @@ class PartenaireController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-
-
-    /**
-     * @Route("/{id}", name="partenaire_delete", methods={"DELETE"})
-     */
-    public function delete(Request $request, Partenaire $partenaire): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$partenaire->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($partenaire);
-            $entityManager->flush();
-        }
-        return $this->redirectToRoute('partenaire_index');
-    }
+   
 }

@@ -11,6 +11,8 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+
 
 
 /**
@@ -18,19 +20,11 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  */
 class UtilisateurController extends AbstractController
 {
-    /**
-     * @Route("/", name="utilisateur_index", methods={"GET"})
-     */
-    public function index(UtilisateurRepository $utilisateurRepository): Response
-    {
-        return $this->render('utilisateur/index.html.twig', [
-            'utilisateurs' => $utilisateurRepository->findAll(),
-        ]);
-    }
+   
     /**
      * @Route("/admin", name="admin", methods={"GET","POST"})
      */
-    public function admin(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder): Response
+    public function admin(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder,SerializerInterface $serializer,ValidatorInterface $validator): Response
     {
         $utilisateur = new Utilisateur();
 
@@ -45,6 +39,13 @@ class UtilisateurController extends AbstractController
         $utilisateur->setPassword($hash);
 
         $entityManager = $this->getDoctrine()->getManager();
+        $errors = $validator->validate($utilisateur);
+            if(count($errors)) {
+                $errors = $serializer->serialize($errors, 'json');
+                return new Response($errors, 500, [
+                    'Content-Type' => 'application/json'
+                ]);
+            }
         $entityManager->persist($utilisateur);
         $entityManager->flush();
 
@@ -53,17 +54,30 @@ class UtilisateurController extends AbstractController
     /**
      * @Route("/user", name="user", methods={"POST"})
      */
-    public function user(Request $request,  EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder): Response
+    public function user(Request $request,  EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder, ValidatorInterface $validator,SerializerInterface $serializer): Response
     {
         $utilisateur = new Utilisateur();
         $form = $this->createForm(UtilisateurType::class, $utilisateur);
         $data = json_decode($request->getContent(), true);
         $form->handleRequest($request);
+        $file=$request->file->all()['imageFile'];
+        
         $form->submit($data);
+        
         $utilisateur->setRoles(["ROLE_USER"]);
         $hash = $encoder->encodePassword($utilisateur, $utilisateur->getPassword());
         $utilisateur->setPassword($hash);
+        $utilisateur->setImageFile($file);
+        $utilisateur->setUpdatedAt(new \DateTime);
+        
         $entityManager = $this->getDoctrine()->getManager();
+        $errors = $validator->validate($utilisateur);
+            if(count($errors)) {
+                $errors = $serializer->serialize($errors, 'json');
+                return new Response($errors, 500, [
+                    'Content-Type' => 'application/json'
+                ]);
+            }
         $entityManager->persist($utilisateur);
         $entityManager->flush();
         
@@ -73,7 +87,7 @@ class UtilisateurController extends AbstractController
      /**
      * @Route("/caissier", name="caissier", methods={"POST"})
      */
-    public function caissier(Request $request,  EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder): Response
+    public function caissier(Request $request,  EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder,SerializerInterface $serializer,ValidatorInterface $validator): Response
     {
         $utilisateur = new Utilisateur();
         $form = $this->createForm(UtilisateurType::class, $utilisateur);
@@ -84,6 +98,13 @@ class UtilisateurController extends AbstractController
         $hash = $encoder->encodePassword($utilisateur, $utilisateur->getPassword());
         $utilisateur->setPassword($hash);
         $entityManager = $this->getDoctrine()->getManager();
+        $errors = $validator->validate($utilisateur);
+            if(count($errors)) {
+                $errors = $serializer->serialize($errors, 'json');
+                return new Response($errors, 500, [
+                    'Content-Type' => 'application/json'
+                ]);
+            }
         $entityManager->persist($utilisateur);
         $entityManager->flush();
         return new Response('Caissier ajouté', Response::HTTP_CREATED);

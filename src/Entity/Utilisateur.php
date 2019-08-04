@@ -7,6 +7,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UtilisateurRepository")
@@ -23,25 +24,15 @@ class Utilisateur implements UserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
+     * @ORM\Column(type="string", length=10)
+     * @Assert\NotBlank(message="Renseigner le username")
+     * @Assert\Length(min="5",minMessage="La longueur du username est de 5",max="10",maxMessage="La longueur du username est de 10")
+    *   @Assert\Type(
+     *     type="string",
+     *     message="Le username le est de type string."
      */
     private $username;
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @var string
-     */
-    private $image;
-
-    /**
-     * @Vich\UploadableField(mapping="utilisateurs", fileNameProperty="image")
-     * @var File
-     */
-    private $imageFile;
-    /**
-     * @ORM\Column(type="datetime")
-     * @var \DateTime
-     */
-    private $updatedAt;
+   
 
     /**
      * @ORM\Column(type="json")
@@ -52,33 +43,78 @@ class Utilisateur implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Assert\NotBlank(message="Renseignez le password")
+     * @Assert\Length(min="7",minMessage="Le mot de pase doit etre long 7 caractères minimum",max="15",maxMessage="Le mot de pase doit etre long 7 caractères maximum")
+    *@Assert\Type(
+     *     type="string",
+     *     message="Le mot de passe est de type string."
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=30)
+     * @Assert\NotBlank(message="Renseignez le nom")
+     * @Assert\Length(min="2",minMessage="Le nom doit etre long 2 caractères minimum",max="10",maxMessage="Le mot de pase doit etre long 10 caractères maximum")
+    *@Assert\Type(
+     *     type="string",
+     *     message="Le nom est de type string."
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=40)
+     * @Assert\NotBlank(message="Renseignez l'email")
+     * @Assert\Length(min="10",minMessage="L'email' doit etre long 10 caractères minimum",max="20",maxMessage="L'email' doit etre long 10 caractères maximum")
+    *@Assert\Type(
+     *     type="email",
+     *     message="Donner un email valide"
+     * @Assert\Email
      */
     private $email;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank(message="Renseignez le téléphone")
+     * @Assert\Length(min="9",message="Le téléphone doit etre long 9 caractères minimum",max="20")
+    *@Assert\Type(
+     *     type="integer",
+     *     message="Le télephone est de type integer"
      */
     private $telephone;
 
     /**
      * @ORM\Column(type="string", length=20)
+     * @Assert\NotBlank(message="Renseignez le statut")
+     * 
      */
     private $statut;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire", inversedBy="utilisateurs")
+     * @Assert\NotBlank(message="Renseigner le partenaire")
+     * @Assert\Positive
+     * @Assert\Type(
+     *     type="integer",
+     *     message="Le partenaire est de type integer."
      */
     private $partenaire;
+ /**
+     * @ORM\Column(type="string", length=255)
+     * @var string
+     */
+    private $image;
+
+    /**
+     * @Vich\UploadableField(mapping="utilisateurs", fileNameProperty="image")
+     * @var File
+     */
+    private $imageFile;
+   /**
+     * @ORM\Column(type="datetime")
+     *
+     * @var \DateTime
+     */
+    private $updatedAt;
 
     public function getId(): ?int
     {
@@ -88,11 +124,12 @@ class Utilisateur implements UserInterface
     {
         $this->imageFile = $imageFile;
 
-        if (null !== $imageFile) {
-            // It is required that at least one field changes if you are using doctrine
-            // otherwise the event listeners won't be called and the file is lost
-            $this->updatedAt = new \DateTimeImmutable();
+        if ($this->imageFile instanceof UploadedFile) {
+            $this->updatedAt = new \DateTime('now');
         }
+          
+               
+
     }
 
     public function getImageFile(): ?File
@@ -232,6 +269,18 @@ class Utilisateur implements UserInterface
     public function setPartenaire(?Partenaire $partenaire): self
     {
         $this->partenaire = $partenaire;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTime $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

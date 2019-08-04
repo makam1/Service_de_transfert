@@ -12,6 +12,8 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Validator\Constraints\DateTime;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+
 
 /**
  * @Route("/api/compte")
@@ -19,22 +21,12 @@ use Symfony\Component\Validator\Constraints\DateTime;
  */
 class CompteController extends AbstractController
 {
-    /**
-     * @Route("/", name="compte_index", methods={"GET"})
-     */
-    public function index(CompteRepository $compteRepository): Response
-    {
-
-      
-        return $this->render('compte/index.html.twig', [
-            'comptes' => $compteRepository->findAll(),
-        ]);
-    }
+    
     /**
      * @Route("/new", name="comptenew", methods={"GET","POST"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function ajout(Request $request,SerializerInterface $serializer,EntityManagerInterface $entityManager ): Response
+    public function ajout(Request $request,SerializerInterface $serializer,EntityManagerInterface $entityManager, ValidatorInterface $validator ): Response
     {
         $compte = new Compte();
         $form = $this->createForm(CompteType::class,$compte);
@@ -45,6 +37,13 @@ class CompteController extends AbstractController
             $compte->setNumerocompte($date);
             $compte->setSolde(5000);
             $entityManager = $this->getDoctrine()->getManager();
+            $errors = $validator->validate($compte);
+            if(count($errors)) {
+            $errors = $serializer->serialize($errors, 'json');
+            return new Response($errors, 500, [
+                'Content-Type' => 'application/json'
+            ]);
+        }
             $entityManager->persist($compte);
             $entityManager->flush();
         

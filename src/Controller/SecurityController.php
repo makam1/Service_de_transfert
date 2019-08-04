@@ -16,6 +16,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Serializer\SerializerInterface;
+
+
 
 /**
  * @Route("/api")
@@ -25,7 +28,7 @@ class SecurityController extends AbstractController
     /**
      *@Route("/creer", name="creer", methods={"POST"})
      */
-  public function creer(Request $request,UserPasswordEncoderInterface $passwordEncoder,EntityManagerInterface $entityManager){
+  public function creer(Request $request,UserPasswordEncoderInterface $passwordEncoder,EntityManagerInterface $entityManager, ValidatorInterface $validator,SerializerInterface $serializer){
     $values=json_decode($request->getContent());
     if(isset($values->username)){
 
@@ -38,7 +41,13 @@ class SecurityController extends AbstractController
         $username->setStatut($values->statut);
         $username->setRoles(["ROLE_SUPERADMIN"]);
         $username->setPassword($passwordEncoder->encodePassword($username,$values->password));
-        
+        $errors = $validator->validate($username);
+        if(count($errors)) {
+            $errors = $serializer->serialize($errors, 'json');
+            return new Response($errors, 500, [
+                'Content-Type' => 'application/json'
+            ]);
+        }
         $entityManager->persist($username);
         $entityManager->flush();
         $data = [

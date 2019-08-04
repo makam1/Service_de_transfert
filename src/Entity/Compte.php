@@ -6,6 +6,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ApiResource()
@@ -37,6 +39,11 @@ class Compte
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire", inversedBy="comptes")
+     * @Assert\NotBlank(message="Renseigner le partenaire")
+     * @Assert\Positive
+     * @Assert\Type(
+     *     type="integer",
+     *     message="Le partenaire est de type integer."
      * @ORM\JoinColumn(nullable=false)
      */
     private $partenaire;

@@ -22,7 +22,12 @@ class Depot
 
     /**
      * @ORM\Column(type="integer")
-     * @Assert\Range(min="75000")
+     * @Assert\NotBlank(message="Renseignez le montant")
+     * @Assert\Range(min="75000",minMessage="Le dépôt minimum est de {{ limit }}")
+     * @Assert\Positive
+     * @Assert\Type(
+     *     type="integer",
+     *     message="Le montant est de type integer."
      */
     private $montant;
 
@@ -33,6 +38,11 @@ class Depot
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Compte", inversedBy="depots")
+     * @Assert\NotBlank(message="Renseignez le compte")
+     * @Assert\Positive
+     * @Assert\Type(
+     *     type="integer",
+     *     message="Le compte est de type integer."
      * @ORM\JoinColumn(nullable=false)
      */
     private $compte;
