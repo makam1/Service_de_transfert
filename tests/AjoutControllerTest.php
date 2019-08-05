@@ -3,7 +3,7 @@ namespace App\Tests;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 class PartenaireControllerTest extends WebTestCase
 {
-     public function testAjoutPartenaire()
+     /*public function testAjoutPartenaire()
     {
         $client = static::createClient([],[
             'PHP_AUTH_USER'=>'mak',
@@ -13,16 +13,17 @@ class PartenaireControllerTest extends WebTestCase
         $crawler = $client->request('POST', '/api/partenaire/new',[],[],
         ['CONTENT_TYPE'=>"application/json"],'
             {
-                "raisonsociale":"mak-service",
-                "ninea":"0054930Y34",
+                "raisonsociale":"sakservice",
+                "ninea":"005493DY34",
                 "adresse":"rufisque",
-                "username":"adminpart",
+                "username":"adminpart1",
                 "password":"passer123",
                 "nom":"admin",
                 "email":"admin@gmail.com",
-                "telephone":7850566587
+                "telephone":785056658
             }');
         $rep=$client->getResponse();
+        var_dump($rep);
         $this->assertSame(201,$client->getResponse()->getStatusCode());
     }
     public function testAjoutCompte()
@@ -42,12 +43,12 @@ class PartenaireControllerTest extends WebTestCase
         $rep=$client->getResponse();
         var_dump($rep);
         $this->assertSame(201,$client->getResponse()->getStatusCode());
-    }
+    }*/
     public function testAjoutDepot()
     {
         $client = static::createClient([],[
-            'PHP_AUTH_USER'=>'mak',
-            'PHP_AUTH_PW'=>'123'
+            'PHP_AUTH_USER'=>'caissier',
+            'PHP_AUTH_PW'=>'passer123'
         ]
         );
         $crawler = $client->request('POST', '/api/depot/new',[],[],

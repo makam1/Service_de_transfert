@@ -3,7 +3,7 @@ namespace App\Tests;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 class UtilisateurControllerTest extends WebTestCase
 {
-   public function testAjoutAdmin()
+   /*public function testAjoutAdmin()
     {
         $client = static::createClient([],[
             'PHP_AUTH_USER'=>'mak',
@@ -13,11 +13,11 @@ class UtilisateurControllerTest extends WebTestCase
         $client->request('POST', '/api/admin',[],[],
         ['CONTENT_TYPE'=>"application/json"],
         '{
-            "username":"doudou",
+            "username":"adminpar",
             "password":"passer123",
             "nom":"doudou",
             "email":"dmg@gmail.com",
-            "telephone":7850566587,
+            "telephone":785056658,
             "Partenaire":1
             }'
             
@@ -26,7 +26,9 @@ class UtilisateurControllerTest extends WebTestCase
     var_dump($a);
     $this->assertSame(201,$client->getResponse()->getStatusCode());
     }
-    public function testAjoutUser()
+
+
+   public function testAjoutUser()
     {
         $client = static::createClient([],[
             'PHP_AUTH_USER'=>'mak',
@@ -36,11 +38,11 @@ class UtilisateurControllerTest extends WebTestCase
         $client->request('POST', '/api/user',[],[],
         ['CONTENT_TYPE'=>"application/json"],
         '{
-            "login":"adPzq71t",
+            "username":"user123",
             "password":"passer123",
-            "nom":test12,
+            "nom":"test12",
             "email":"admin@gmail.com",
-            "telephone":785056,
+            "telephone":785056790,
             "Partenaire":"1"
             }'
     );
@@ -48,7 +50,7 @@ class UtilisateurControllerTest extends WebTestCase
     var_dump($re);
     $this->assertSame(201,$client->getResponse()->getStatusCode());
     } 
-    public function testLogin()
+     public function testLogin()
     {
         $client = static::createClient([],[
             'PHP_AUTH_USER'=>'mak',
@@ -77,19 +79,18 @@ class UtilisateurControllerTest extends WebTestCase
         $client->request('POST', '/api/creer',[],[],
         ['CONTENT_TYPE'=>"application/json"],
         '{
-            "login":"adminsup",
+            "username":"adminsup1",
             "password":"passer123",
-            "nom":adminsup,
+            "nom":"adminsup",
             "email":"admin@gmail.com",
-            "telephone":785056,
-            "Partenaire":"1"
+            "telephone":785056675
             }'
     );
   $re =$client->getResponse();
     var_dump($re);
     $this->assertSame(201,$client->getResponse()->getStatusCode());
-    } 
-    public function testAjoutCaissier()
+    } */
+      public function testAjoutCaissier()
     {
         $client = static::createClient([],[
             'PHP_AUTH_USER'=>'mak',
@@ -99,11 +100,11 @@ class UtilisateurControllerTest extends WebTestCase
         $client->request('POST', '/api/caissier',[],[],
         ['CONTENT_TYPE'=>"application/json"],
         '{
-            "login":"caissier",
+            "username":"caissier1",
             "password":"passer123",
-            "nom":adminsup,
+            "nom":"adminsup",
             "email":"admin@gmail.com",
-            "telephone":785056,
+            "telephone":785056123,
             "Partenaire":"1"
             }'
     );

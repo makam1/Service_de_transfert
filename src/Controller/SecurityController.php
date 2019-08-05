@@ -38,7 +38,7 @@ class SecurityController extends AbstractController
         $username->setUsername($values->username);
         $username->setEmail($values->email);
         $username->setTelephone($values->telephone);
-        $username->setStatut($values->statut);
+        $username->setStatut('actif');
         $username->setRoles(["ROLE_SUPERADMIN"]);
         $username->setPassword($passwordEncoder->encodePassword($username,$values->password));
         $errors = $validator->validate($username);
