@@ -35,10 +35,10 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/api/creer ,            roles: ROLE_SUPERADMIN }   
-        #- { path: ^/api/partenaire,           roles: ROLE_SUPERADMIN }
-        #- { path: ^/api/compte,               roles: ROLE_SUPERADMIN }
-        #- { path: ^/api/compte,               roles: ROLE_ADMIN }
-        #- { path: ^/api/depot,                roles: ROLE_CAISSIER }
+        - { path: ^/api/partenaire,           roles: ROLE_SUPERADMIN }
+        - { path: ^/api/compte,               roles: ROLE_SUPERADMIN }
+        - { path: ^/api/compte,               roles: ROLE_ADMIN }
+        - { path: ^/api/depot,                roles: ROLE_CAISSIER }
         - { path: ^/api/admin,        roles: ROLE_SUPERADMIN }
         - { path: ^/api/user,        roles: ROLE_SUPERADMIN }
         - { path: ^/api/caissier,        roles: ROLE_SUPERADMIN }

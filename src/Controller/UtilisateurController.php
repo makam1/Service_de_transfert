@@ -32,12 +32,14 @@ class UtilisateurController extends AbstractController
         $data = json_decode($request->getContent(), true);
         $form->handleRequest($request);
         $form->submit($data);
-
+     /** $file=$request->files->all()['imageFile'];*/
         $utilisateur->setRoles(["ROLE_ADMIN"]);
 
         $hash = $encoder->encodePassword($utilisateur, $utilisateur->getPassword());
         $utilisateur->setPassword($hash);
-
+        $utilisateur->setStatut("actif");
+        /** $utilisateur->setImageFile($file);*/ 
+        /** $utilisateur->setUpdatedAt(new \DateTime); */
         $entityManager = $this->getDoctrine()->getManager();
         $errors = $validator->validate($utilisateur);
             if(count($errors)) {
@@ -60,16 +62,16 @@ class UtilisateurController extends AbstractController
         $form = $this->createForm(UtilisateurType::class, $utilisateur);
         $data = json_decode($request->getContent(), true);
         $form->handleRequest($request);
-        $file=$request->file->all()['imageFile'];
+        /** $file=$request->files->all()['imageFile'];*/
         
         $form->submit($data);
         
         $utilisateur->setRoles(["ROLE_USER"]);
         $hash = $encoder->encodePassword($utilisateur, $utilisateur->getPassword());
         $utilisateur->setPassword($hash);
-        $utilisateur->setImageFile($file);
-        $utilisateur->setUpdatedAt(new \DateTime);
-        
+       /** $utilisateur->setImageFile($file);*/ 
+        /** $utilisateur->setUpdatedAt(new \DateTime); */
+        $utilisateur->setStatut("actif");
         $entityManager = $this->getDoctrine()->getManager();
         $errors = $validator->validate($utilisateur);
             if(count($errors)) {
@@ -93,10 +95,12 @@ class UtilisateurController extends AbstractController
         $form = $this->createForm(UtilisateurType::class, $utilisateur);
         $data = json_decode($request->getContent(), true);
         $form->handleRequest($request);
+         /** $file=$request->files->all()['imageFile'];*/
         $form->submit($data);
         $utilisateur->setRoles(["ROLE_CAISSIER"]);
         $hash = $encoder->encodePassword($utilisateur, $utilisateur->getPassword());
         $utilisateur->setPassword($hash);
+        $utilisateur->setStatut("actif");
         $entityManager = $this->getDoctrine()->getManager();
         $errors = $validator->validate($utilisateur);
             if(count($errors)) {
@@ -123,9 +127,12 @@ class UtilisateurController extends AbstractController
      */
     public function bloquer(Request $request, Utilisateur $utilisateur): Response
     {
+        $utilisateur = new Utilisateur();
         $form = $this->createForm(UtilisateurType::class, $utilisateur);
         $data = json_decode($request->getContent(), true);
         $form->handleRequest($request);
+
+        $utilisateur->setStatut("bloqué");
         $form->Submit($data);
         $this->getDoctrine()->getManager()->flush();
         return new Response('Modification effectif ', Response::HTTP_CREATED);

@@ -21,12 +21,12 @@ class UtilisateurType extends AbstractType
             ->add('nom')
             ->add('email')
             ->add('telephone')
-            ->add('statut')
             ->add('partenaire',EntityType::class,[
                 'class'=> Partenaire::class,
                 'choice_label'=> 'partenaire_id'
             ])
-            ->add('imageFile', VichImageType::class)
+            
+            //->add('imageFile', VichImageType::class)
         ;
     }
 

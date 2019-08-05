@@ -14,7 +14,14 @@ class CompteType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-            
+        $builder
+          
+            ->add('partenaire',EntityType::class,[
+                'class'=> Partenaire::class,
+                'choice_label'=> 'partenaire_id'
+            ])       
+        ;
+
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -40,11 +40,9 @@ class PartenaireController extends AbstractController
     /**
      * @Route("/new", name="partenaire_new", methods={"GET","POST"})
      */
-    public function new(Request $request,UserPasswordEncoderInterface $passwordEncoder,SerializerInterface $serializer,EntityManagerInterface $entityManager, ValidatorInterface $validator ): Response
+    public function new(Request $request,UserPasswordEncoderInterface $passwordEncoder,SerializerInterface $serializer,EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
     {
 
-        $content='Content-Type';
-        $appli='application/json';
         $values=json_decode($request->getContent());
         $partenaire = new Partenaire();
         $partenaire->setRaisonsociale($values->raisonsociale);
@@ -65,32 +63,23 @@ class PartenaireController extends AbstractController
         $username->setEmail($values->email);
         $username->setTelephone($values->telephone);
         $username->setStatut("actif");
-        $username->setRoles(["ROLE_SUPERADMIN"]);
+        $username->setRoles(["ROLE_ADMIN"]);
         $username->setPassword($passwordEncoder->encodePassword($username,$values->password));
         $username->setPartenaire($partenaire);
 
-        $entityManager = $this->getDoctrine()->getManager();
         $entityManager = $this->getDoctrine()->getManager();
             $errors = $validator->validate($partenaire);
             if(count($errors)) {
                 $errors = $serializer->serialize($errors, 'json');
                 return new Response($errors, 500, [
-                    $content =>  $appli
+                    'Content-Type'=>  'application/json'
                 ]);
             }
-            $errors1 = $validator->validate($username);
-            if(count($errors1)) {
-                $errors1 = $serializer->serialize($errors1, 'json');
-                return new Response($errors1, 500, [
-                    $content =>  $appli
-                ]);
-            }
-
-            $errors2 = $validator->validate($compte);
-            if(count($errors2)) {
-                $errors2 = $serializer->serialize($errors2, 'json');
-                return new Response($errors2, 500, [
-                    $content =>  $appli
+            $m = $validator->validate($username);
+            if(count($m)) {
+                $m = $serializer->serialize($m, 'json');
+                return new Response($m, 500, [
+                    'Content-Type'=>  'application/json'
                 ]);
             }
         $entityManager->persist($partenaire);

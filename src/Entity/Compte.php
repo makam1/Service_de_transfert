@@ -39,12 +39,9 @@ class Compte
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire", inversedBy="comptes")
-     * @Assert\NotBlank(message="Renseigner le partenaire")
-     * @Assert\Positive
-     * @Assert\Type(
-     *     type="integer",
-     *     message="Le partenaire est de type integer."
      * @ORM\JoinColumn(nullable=false)
+     *     @Assert\NotBlank(message="Renseignez le partenaire")
+
      */
     private $partenaire;
 

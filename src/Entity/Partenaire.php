@@ -29,20 +29,20 @@ class Partenaire
     /**
      * @ORM\Column(type="string", length=30)
      * @Assert\NotBlank(message="Ce champ ne doit pas être vide")
-     * @Assert\Length(min="7",minMessage="La longueur du ninea est de 7",max="30",maxMessage="La longueur du ninea est de 30")
+     * @Assert\Length(min="7",minMessage="La longueur minimale de la raison sociale est de 7",max="30",maxMessage="La longueur maximale la raison sociale est de 30")
     *@Assert\Type(
      *     type="string",
-     *     message="La raison sociale est de type string."
+     *     message="La raison sociale est de type string.")
      */
     private $raisonsociale;
 
     /**
      * @ORM\Column(type="string", length=10, unique=true)
      * @Assert\NotBlank(message="Ce champ ne doit pas être vide")
-     * @Assert\Length(min="10",max="10",message="La longueur du ninea est de 10")
+     * @Assert\Length(min="10",max="10",minMessage="La longueur du ninea est de 10")
      * @Assert\Type(
      *     type="string",
-     *     message="Le ninea est de type string."
+     *     message="Le ninea est de type string.")
      */
     private $ninea;
 
@@ -51,7 +51,7 @@ class Partenaire
      * @Assert\NotBlank(message="Ce champ ne doit pas être vide")
      * @Assert\Type(
      *     type="string",
-     *     message="L'adresse est de type string."
+     *     message="L'adresse est de type string.")
      */
     private $adresse;
 

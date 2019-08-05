@@ -27,7 +27,7 @@ class Depot
      * @Assert\Positive
      * @Assert\Type(
      *     type="integer",
-     *     message="Le montant est de type integer."
+     *     message="Le montant est de type integer.")
      */
     private $montant;
 
@@ -39,10 +39,6 @@ class Depot
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Compte", inversedBy="depots")
      * @Assert\NotBlank(message="Renseignez le compte")
-     * @Assert\Positive
-     * @Assert\Type(
-     *     type="integer",
-     *     message="Le compte est de type integer."
      * @ORM\JoinColumn(nullable=false)
      */
     private $compte;
