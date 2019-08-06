@@ -2,13 +2,14 @@
 
 namespace App\Form;
 
+use App\Entity\Partenaire;
 use App\Entity\Utilisateur;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Vich\UploaderBundle\Form\Type\VichImageType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use App\Entity\Partenaire;
 
 class UtilisateurType extends AbstractType
 {
@@ -25,7 +26,9 @@ class UtilisateurType extends AbstractType
                 'choice_label'=> 'partenaire_id'
             ])
             
-            //->add('imageFile', VichImageType::class)
+            ->add('imageFile' ,VichImageType::class, [
+                'required' => false
+            ])   
         ;
     }
 
@@ -33,7 +36,7 @@ class UtilisateurType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Utilisateur::class,
-         
+            'csrf_protection'=>false
         ]);
     }
 }

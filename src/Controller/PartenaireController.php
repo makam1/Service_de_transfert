@@ -1,23 +1,24 @@
 <?php
 namespace App\Controller;
-use App\Entity\Partenaire;
 use App\Entity\Compte;
+use App\Form\CompteType;
+use App\Entity\Partenaire;
 use App\Entity\Utilisateur;
 use App\Form\PartenaireType;
-use App\Form\CompteType;
+use App\Form\UtilisateurType;
+use App\Repository\CompteRepository;
 use App\Repository\PartenaireRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\UtilisateurRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Symfony\Component\Validator\Constraints\DateTime;
-use App\Repository\CompteRepository;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Constraints\DateTime;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 
 
@@ -40,55 +41,61 @@ class PartenaireController extends AbstractController
     /**
      * @Route("/new", name="partenaire_new", methods={"GET","POST"})
      */
-    public function new(Request $request,UserPasswordEncoderInterface $passwordEncoder,SerializerInterface $serializer,EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
+    public function new( UserPasswordEncoderInterface $encoder,Request $request,UserPasswordEncoderInterface $passwordEncoder,SerializerInterface $serializer,EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
     {
-
-        $values=json_decode($request->getContent());
         $partenaire = new Partenaire();
-        $partenaire->setRaisonsociale($values->raisonsociale);
-        $partenaire->setNinea($values->ninea);
-        $partenaire->setAdresse($values->adresse);
+        $form = $this->createForm(PartenaireType::class, $partenaire);
+        $form->handleRequest($request);
+        $data=$request->request->all();
+        $form->submit($data);
 
         $compte = new Compte();
+        $form1 = $this->createForm(CompteType::class, $compte);
+        $form1->handleRequest($request);
+        $form1->submit($data);
         $date=date("Y").date("m").date("d").date("H").date("i").date("s");
         $compte->setNumerocompte($date);
         $compte->setSolde(0);
         $compte->setPartenaire($partenaire);
 
-       
         $username = new Utilisateur();
-
-        $username->setNom($values->nom);
-        $username->setUsername($values->username);
-        $username->setEmail($values->email);
-        $username->setTelephone($values->telephone);
+        $form2= $this->createForm(UtilisateurType::class, $username);
+        $form2->handleRequest($request);
+        $file=$request->files->all()['imageFile'];
+        $form2->submit($data);
         $username->setStatut("actif");
         $username->setRoles(["ROLE_ADMIN"]);
-        $username->setPassword($passwordEncoder->encodePassword($username,$values->password));
+        $hash = $encoder->encodePassword($username, $username->getPassword());
+        $username->setPassword($hash);
+        $username->setImageFile($file);
+        $username->setUpdatedAt(new \DateTime);
         $username->setPartenaire($partenaire);
 
         $entityManager = $this->getDoctrine()->getManager();
-            $errors = $validator->validate($partenaire);
-            if(count($errors)) {
-                $errors = $serializer->serialize($errors, 'json');
-                return new Response($errors, 500, [
-                    'Content-Type'=>  'application/json'
-                ]);
-            }
-            $m = $validator->validate($username);
+        $errors = $validator->validate($partenaire);
+        if(count($errors)) {
+            $errors = $serializer->serialize($errors, 'json');
+            return new Response($errors, 500, [
+                'Content-Type'=>  'application/json'
+            ]);
+        }
+        $m = $validator->validate($username);
             if(count($m)) {
                 $m = $serializer->serialize($m, 'json');
                 return new Response($m, 500, [
                     'Content-Type'=>  'application/json'
                 ]);
             }
-        $entityManager->persist($partenaire);
+
         $entityManager->persist($compte);
+        $entityManager->persist($partenaire);
         $entityManager->persist($username);
+
         $entityManager->flush();
 
-        return new Response("Le partenaire, son compte et l'admin associé et ont été ajouté",Response::HTTP_CREATED);
-    
+        return new Response('Partenaire, compte et admin associé ajouté', Response::HTTP_CREATED);
+
+
     }
 
 

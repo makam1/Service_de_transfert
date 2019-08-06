@@ -23,9 +23,23 @@ class AppFixtures extends Fixture
         $admin->setEmail("mak@gmail.com");
         $admin->setTelephone(778900987);
         $admin->setStatut('actif');
+        $admin->setImageName("png");
+        $admin->setUpdatedAt(new \DateTime());
         $admin->setRoles(["ROLE_SUPERADMIN"]);
         $admin->setPassword($this->passwordEncoder->encodePassword($admin,'passer123'));
         $manager->persist($admin);
+
+        $caissier = new Utilisateur();
+        $caissier->setNom("caissier");
+        $caissier->setUsername("caissier");
+        $caissier->setEmail("caissier@gmail.com");
+        $caissier->setTelephone(778900987);
+        $caissier->setStatut('actif');
+        $caissier->setRoles(["ROLE_CAISSIER"]);
+        $caissier->setImageName("png");
+        $caissier->setUpdatedAt(new \DateTime());
+        $caissier->setPassword($this->passwordEncoder->encodePassword($admin,'passer123'));
+        $manager->persist($caissier);
 
         $manager->flush();
     }

@@ -30,12 +30,12 @@ class CompteController extends AbstractController
     {
         $compte = new Compte();
         $form = $this->createForm(CompteType::class,$compte);
-        $data=json_decode($request->getContent(), true);
+        $data=$request->request->all();
         $form->submit($data);
         if($form->isSubmitted()){
             $date=date("Y").date("m").date("d").date("H").date("i").date("s");
             $compte->setNumerocompte($date);
-            $compte->setSolde(5000);
+            $compte->setSolde(0);
             $entityManager = $this->getDoctrine()->getManager();
             $errors = $validator->validate($compte);
             if(count($errors)) {

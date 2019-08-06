@@ -3,11 +3,11 @@ namespace App\Tests;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 class UtilisateurControllerTest extends WebTestCase
 {
-   /*public function testAjoutAdmin()
+   public function testAjoutAdmin()
     {
         $client = static::createClient([],[
-            'PHP_AUTH_USER'=>'mak',
-            'PHP_AUTH_PW'=>'123'
+            'PHP_AUTH_USER'=>'makam12',
+            'PHP_AUTH_PW'=>'passer123'
         ] 
         );
         $client->request('POST', '/api/admin',[],[],
@@ -18,6 +18,7 @@ class UtilisateurControllerTest extends WebTestCase
             "nom":"doudou",
             "email":"dmg@gmail.com",
             "telephone":785056658,
+            "imageName":"image.png",
             "Partenaire":1
             }'
             
@@ -31,8 +32,8 @@ class UtilisateurControllerTest extends WebTestCase
    public function testAjoutUser()
     {
         $client = static::createClient([],[
-            'PHP_AUTH_USER'=>'mak',
-            'PHP_AUTH_PW'=>'123'
+            'PHP_AUTH_USER'=>'makam12',
+            'PHP_AUTH_PW'=>'passer123'
         ]
         );
         $client->request('POST', '/api/user',[],[],
@@ -43,6 +44,7 @@ class UtilisateurControllerTest extends WebTestCase
             "nom":"test12",
             "email":"admin@gmail.com",
             "telephone":785056790,
+            "imageName":"image.png",
             "Partenaire":"1"
             }'
     );
@@ -53,15 +55,15 @@ class UtilisateurControllerTest extends WebTestCase
      public function testLogin()
     {
         $client = static::createClient([],[
-            'PHP_AUTH_USER'=>'mak',
-            'PHP_AUTH_PW'=>'123'
+            'PHP_AUTH_USER'=>'makam12',
+            'PHP_AUTH_PW'=>'passer123'
         ]
         );
         $client->request('POST', '/api/connexion',[],[],
         ['CONTENT_TYPE'=>"application/json"],
         '{
-            "username":"mak",
-            "password":"123"
+            "username":"makam12",
+            "password":"passer123"
             
             }'
     );
@@ -72,8 +74,8 @@ class UtilisateurControllerTest extends WebTestCase
     public function testCreer()
     {
         $client = static::createClient([],[
-            'PHP_AUTH_USER'=>'mak',
-            'PHP_AUTH_PW'=>'123'
+            'PHP_AUTH_USER'=>'makam12',
+            'PHP_AUTH_PW'=>'passer123'
         ]
         );
         $client->request('POST', '/api/creer',[],[],
@@ -83,18 +85,19 @@ class UtilisateurControllerTest extends WebTestCase
             "password":"passer123",
             "nom":"adminsup",
             "email":"admin@gmail.com",
+            "imageName":"image.png",
             "telephone":785056675
             }'
     );
   $re =$client->getResponse();
     var_dump($re);
     $this->assertSame(201,$client->getResponse()->getStatusCode());
-    } */
+    } 
       public function testAjoutCaissier()
     {
         $client = static::createClient([],[
-            'PHP_AUTH_USER'=>'mak',
-            'PHP_AUTH_PW'=>'123'
+            'PHP_AUTH_USER'=>'makam12',
+            'PHP_AUTH_PW'=>'passer123'
         ]
         );
         $client->request('POST', '/api/caissier',[],[],
@@ -105,10 +108,11 @@ class UtilisateurControllerTest extends WebTestCase
             "nom":"adminsup",
             "email":"admin@gmail.com",
             "telephone":785056123,
+            "imageName":"image.png",
             "Partenaire":"1"
             }'
     );
-  $re =$client->getResponse();
+    $re =$client->getResponse();
     var_dump($re);
     $this->assertSame(201,$client->getResponse()->getStatusCode());
     } 

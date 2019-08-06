@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="App\Tests\PartenaireControllerTest" file="/home/mak/Nei-yawi-Transfert/tests/AjoutControllerTest.php" tests="1" assertions="1" errors="0" failures="0" skipped="0" time="1.317459">
-    <testcase name="testAjoutDepot" class="App\Tests\PartenaireControllerTest" classname="App.Tests.PartenaireControllerTest" file="/home/mak/Nei-yawi-Transfert/tests/AjoutControllerTest.php" line="47" assertions="1" time="1.317459">
-      <system-out>/home/mak/Nei-yawi-Transfert/tests/AjoutControllerTest.php:62:
-class Symfony\Component\HttpFoundation\Response#446 (6) {
+  <testsuite name="App\Tests\PartenaireControllerTest" file="/home/mak/Transfert/tests/AjoutControllerTest.php" tests="1" assertions="1" errors="0" failures="1" skipped="0" time="1.705222">
+    <testcase name="testAjoutPartenaire" class="App\Tests\PartenaireControllerTest" classname="App.Tests.PartenaireControllerTest" file="/home/mak/Transfert/tests/AjoutControllerTest.php" line="6" assertions="1" time="1.705222">
+      <failure type="PHPUnit\Framework\ExpectationFailedException">App\Tests\PartenaireControllerTest::testAjoutPartenaire
+Failed asserting that 500 is identical to 201.
+
+/home/mak/Transfert/tests/AjoutControllerTest.php:28
+</failure>
+      <system-out>/home/mak/Transfert/tests/AjoutControllerTest.php:27:
+class Symfony\Component\HttpFoundation\Response#1986 (6) {
   public $headers =&gt;
-  class Symfony\Component\HttpFoundation\ResponseHeaderBag#387 (5) {
+  class Symfony\Component\HttpFoundation\ResponseHeaderBag#1925 (5) {
     protected $computedCacheControl =&gt;
     array(2) {
       'no-cache' =&gt;
@@ -18,19 +23,23 @@ class Symfony\Component\HttpFoundation\Response#446 (6) {
     }
     protected $headerNames =&gt;
     array(5) {
+      'content-type' =&gt;
+      string(12) "Content-Type"
       'cache-control' =&gt;
       string(13) "Cache-Control"
       'date' =&gt;
       string(4) "Date"
-      'content-type' =&gt;
-      string(12) "Content-Type"
-      'link' =&gt;
-      string(4) "Link"
       'x-robots-tag' =&gt;
       string(12) "X-Robots-Tag"
+      'link' =&gt;
+      string(4) "Link"
     }
     protected $headers =&gt;
     array(5) {
+      'content-type' =&gt;
+      array(1) {
+        ...
+      }
       'cache-control' =&gt;
       array(1) {
         ...
@@ -39,15 +48,11 @@ class Symfony\Component\HttpFoundation\Response#446 (6) {
       array(1) {
         ...
       }
-      'content-type' =&gt;
+      'x-robots-tag' =&gt;
       array(1) {
         ...
       }
       'link' =&gt;
-      array(1) {
-        ...
-      }
-      'x-robots-tag' =&gt;
       array(1) {
         ...
       }
@@ -57,13 +62,21 @@ class Symfony\Component\HttpFoundation\Response#446 (6) {
     }
   }
   protected $content =&gt;
-  string(28) "Le dépôt a été effectué"
+  string(251532) "&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset="UTF-8" /&gt;
+        &lt;meta name="robots" content="noindex,nofollow" /&gt;
+        &lt;meta name="viewport" content="width=device-width,initial-scale=1" /&gt;
+        &lt;title&gt;    Mapping not found for field &amp;quot;imageFile&amp;quot; (500 Internal Server Error)
+&lt;/title&gt;
+        &lt;link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAgCAYAAAABtRhCAAADVUlEQVRIx82XX0jTURTHLYPyqZdefQx66CEo80+aYpoIkqzUikz6Z5klQoWUWYRIJYEUGpQ+lIr9U5dOTLdCt"...
   protected $version =&gt;
   string(3) "1.1"
   protected $statusCode =&gt;
-  int(201)
+  int(500)
   protected $statusText =&gt;
-  string(7) "Created"
+  string(21) "Internal Server Error"
   protected $charset =&gt;
   string(5) "UTF-8"
 }
