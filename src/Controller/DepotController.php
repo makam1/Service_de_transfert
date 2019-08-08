@@ -11,6 +11,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use App\Entity\Post;
+
+
 
 /**
  * @Route("/api/depot")
@@ -28,8 +32,9 @@ class DepotController extends AbstractController
     }
     /**
      * @Route("/new", name="depot_new", methods={"GET","POST"})
+     * @Security("utilisateur.getStatut =='actif' ")
      */
-    public function new(Request $request,SerializerInterface $serializer,EntityManagerInterface $entityManager,ValidatorInterface $validator ): Response
+    public function new(Post $post,Request $request,SerializerInterface $serializer,EntityManagerInterface $entityManager,ValidatorInterface $validator ): Response
     {
         $depot = new Depot();
       

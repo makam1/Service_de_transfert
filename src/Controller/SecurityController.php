@@ -72,10 +72,12 @@ class SecurityController extends AbstractController
     public function connexion():JsonResponse
     {    
         $username =$this->getUser();
-       
+        $statut=$this->getUser()->getStatut();
+        
         return $this->json([
             'username' => $username->getUsername(),
-            'roles' => $username->getRoles()
+            'roles' => $username->getRoles(),
+            'statut' => $username->getStatut(),
         ]);
         
     }

@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\Compte;
 use App\Entity\Partenaire;
 use App\Entity\Utilisateur;
 use Symfony\Component\Form\AbstractType;
@@ -21,14 +22,11 @@ class UtilisateurType extends AbstractType
             ->add('nom')
             ->add('email')
             ->add('telephone')
-            ->add('partenaire',EntityType::class,[
-                'class'=> Partenaire::class,
-                'choice_label'=> 'partenaire_id'
-            ])
-            
+
             ->add('imageFile' ,VichImageType::class, [
                 'required' => false
-            ])   
+            ]) 
+            
         ;
     }
 

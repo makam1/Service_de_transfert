@@ -13,21 +13,22 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 
 /**
  * @Route("/api/compte")
- * @IsGranted("ROLE_ADMIN")
  */
 class CompteController extends AbstractController
 {
     
     /**
      * @Route("/new", name="comptenew", methods={"GET","POST"})
-     * @IsGranted("ROLE_ADMIN")
      */
-    public function ajout(Request $request,SerializerInterface $serializer,EntityManagerInterface $entityManager, ValidatorInterface $validator ): Response
+    public function new(Request $request,SerializerInterface $serializer,EntityManagerInterface $entityManager, ValidatorInterface $validator ): Response
     {
+
         $compte = new Compte();
         $form = $this->createForm(CompteType::class,$compte);
         $data=$request->request->all();

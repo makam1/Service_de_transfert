@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
@@ -111,8 +113,12 @@ class Utilisateur implements UserInterface
      */
     private $updatedAt;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Compte", inversedBy="utilisateur")
+     */
+    private $compte;
 
-
+  
     public function getId(): ?int
     {
         return $this->id;
@@ -297,6 +303,17 @@ class Utilisateur implements UserInterface
         return $this;
     }
 
-  
+    public function getCompte(): ?Compte
+    {
+        return $this->compte;
+    }
+
+    public function setCompte(?Compte $compte): self
+    {
+        $this->compte = $compte;
+
+        return $this;
+    }
+
 
 }

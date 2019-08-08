@@ -57,6 +57,7 @@ class PartenaireController extends AbstractController
         $compte->setNumerocompte($date);
         $compte->setSolde(0);
         $compte->setPartenaire($partenaire);
+       
 
         $username = new Utilisateur();
         $form2= $this->createForm(UtilisateurType::class, $username);
@@ -70,7 +71,7 @@ class PartenaireController extends AbstractController
         $username->setImageFile($file);
         $username->setUpdatedAt(new \DateTime);
         $username->setPartenaire($partenaire);
-
+        $username->setCompte($compte);
         $entityManager = $this->getDoctrine()->getManager();
         $errors = $validator->validate($partenaire);
         if(count($errors)) {
@@ -99,7 +100,7 @@ class PartenaireController extends AbstractController
     }
 
 
-    /**!rtenaire_show", methods={"GET"})
+    /** @Route("/{id}", name="partenaire_show", methods={"GET"})
      */
     public function show(Partenaire $partenaire): Response
     {
@@ -110,9 +111,9 @@ class PartenaireController extends AbstractController
 
 
     /**
-     * @Route("/{id}/edit", name="partenaire_edit", methods={"GET","POST"})
+     * @Route("/{id}/bloquer", name="partenaire_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Partenaire $partenaire): Response
+    public function bloquer(Request $request, Partenaire $partenaire): Response
     {
         $form = $this->createForm(PartenaireType::class, $partenaire);
         $form->handleRequest($request);
