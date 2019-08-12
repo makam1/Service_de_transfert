@@ -2,27 +2,31 @@
 
 namespace App\Form;
 
-use App\Entity\Partenaire;
+use App\Entity\Client;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class PartenaireType extends AbstractType
+class ClientType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('raisonsociale')
-            ->add('ninea')
-            ->add('adresse')
-            
+            ->add('nomenvoyeur')
+            ->add('prenomenvoyeur')
+            ->add('telephoneenvoyeur')
+            ->add('NCIenvoyeur')
+            ->add('nombeneficiaire')
+            ->add('prenombeneficiaire')
+            ->add('telephonebeneficiaire')
+            ->add('CNIbeneficiaire')
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Partenaire::class,
+            'data_class' => Client::class,
         ]);
     }
 }

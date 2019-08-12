@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Partenaire;
 use App\Entity\Utilisateur;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -17,6 +18,14 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
+
+        $partenaire = new Partenaire();
+        $partenaire->setRaisonsociale("système");
+        $partenaire->setNinea("12349876AW");
+        $partenaire->setAdresse("Mermoz");
+        $partenaire->setStatut("actif");
+        $manager->persist($partenaire);
+
         $admin = new Utilisateur();
         $admin->setNom("mairame");
         $admin->setUsername("makam12");
@@ -27,6 +36,7 @@ class AppFixtures extends Fixture
         $admin->setUpdatedAt(new \DateTime());
         $admin->setRoles(["ROLE_SUPERADMIN"]);
         $admin->setPassword($this->passwordEncoder->encodePassword($admin,'passer123'));
+        $admin->setPartenaire($partenaire);
         $manager->persist($admin);
 
         $caissier = new Utilisateur();
@@ -39,6 +49,7 @@ class AppFixtures extends Fixture
         $caissier->setImageName("png");
         $caissier->setUpdatedAt(new \DateTime());
         $caissier->setPassword($this->passwordEncoder->encodePassword($admin,'passer123'));
+        $caissier->setPartenaire($partenaire);
         $manager->persist($caissier);
 
         $manager->flush();

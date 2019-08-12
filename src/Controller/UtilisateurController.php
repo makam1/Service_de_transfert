@@ -1,5 +1,6 @@
 <?php
 namespace App\Controller;
+
 use App\Entity\Compte;
 use App\Entity\Utilisateur;
 use App\Form\UtilisateurType;
@@ -10,8 +11,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -75,9 +74,7 @@ class UtilisateurController extends AbstractController
 
         $form->submit($data);
         
-
         $id=$this->getUser()->getPartenaire();
-        $idcompte=$this->getUser()->getPartenaire()->getComptes()[0];
 
         $utilisateur->setRoles(["ROLE_USER"]);
         $hash = $encoder->encodePassword($utilisateur, $utilisateur->getPassword());
@@ -86,7 +83,6 @@ class UtilisateurController extends AbstractController
         $utilisateur->setUpdatedAt(new \DateTime);
         $utilisateur->setStatut("actif");
         $utilisateur->setPartenaire($id);
-        $utilisateur->setCompte($idcompte);
         $entityManager = $this->getDoctrine()->getManager();
         $errors = $validator->validate($utilisateur);
             if(count($errors)) {
@@ -95,7 +91,9 @@ class UtilisateurController extends AbstractController
                     'Content-Type' => 'application/json'
                 ]);
             }
+
         $entityManager->persist($utilisateur);
+
         $entityManager->flush();
         
         return new Response('Utilisateur ajouté', Response::HTTP_CREATED);
@@ -127,8 +125,11 @@ class UtilisateurController extends AbstractController
                     'Content-Type' => 'application/json'
                 ]);
             }
+
         $entityManager->persist($utilisateur);
+
         $entityManager->flush();
+
         return new Response('Caissier ajouté', Response::HTTP_CREATED);
     }
     /**
@@ -140,20 +141,15 @@ class UtilisateurController extends AbstractController
             'utilisateur' => $utilisateur,
         ]);
     }
-    /**
-     * @Route("/{id}/bloquer", name="bloquer", methods={"GET","POST"})
+/**
+     * @Route("/{id}/edit", name="utilisateur_edit", methods={"GET","POST"})
      */
-    public function bloquer(Request $request, Utilisateur $utilisateur): Response
+    public function edit(Request $request, Utilisateur $utilisateur): Response
     {
-        $utilisateur = new Utilisateur();
         $form = $this->createForm(UtilisateurType::class, $utilisateur);
-        $data=$request->request->all();
+        $data = json_decode($request->getContent(), true);
         $form->handleRequest($request);
-
-        $utilisateur->setStatut("bloqué");
-
         $form->Submit($data);
-
         $this->getDoctrine()->getManager()->flush();
         return new Response('Modification effectif ', Response::HTTP_CREATED);
     }

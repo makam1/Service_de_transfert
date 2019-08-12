@@ -47,6 +47,7 @@ class PartenaireController extends AbstractController
         $form = $this->createForm(PartenaireType::class, $partenaire);
         $form->handleRequest($request);
         $data=$request->request->all();
+        $partenaire->setStatut("actif");
         $form->submit($data);
 
         $compte = new Compte();

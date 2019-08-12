@@ -11,8 +11,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use App\Entity\Post;
 
 
 
@@ -32,9 +30,8 @@ class DepotController extends AbstractController
     }
     /**
      * @Route("/new", name="depot_new", methods={"GET","POST"})
-     * @Security("utilisateur.getStatut =='actif' ")
      */
-    public function new(Post $post,Request $request,SerializerInterface $serializer,EntityManagerInterface $entityManager,ValidatorInterface $validator ): Response
+    public function new(Request $request,SerializerInterface $serializer,EntityManagerInterface $entityManager,ValidatorInterface $validator ): Response
     {
         $depot = new Depot();
       
@@ -82,25 +79,9 @@ class DepotController extends AbstractController
     {
         $form = $this->createForm(DepotType::class, $depot);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
             $this->getDoctrine()->getManager()->flush();
-            return $this->redirectToRoute('depot_index');
+            return new Response('Le dépôt a été effectué',Response::HTTP_CREATED);
         }
-        return $this->render('depot/edit.html.twig', [
-            'depot' => $depot,
-            'form' => $form->createView(),
-        ]);
-    }
-    /**
-     * @Route("/{id}", name="depot_delete", methods={"DELETE"})
-     */
-    public function delete(Request $request, Depot $depot): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$depot->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($depot);
-            $entityManager->flush();
-        }
-        return $this->redirectToRoute('depot_index');
     }
 }

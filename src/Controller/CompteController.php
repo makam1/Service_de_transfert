@@ -78,16 +78,5 @@ class CompteController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-    /**
-     * @Route("/{id}", name="compte_delete", methods={"DELETE"})
-     */
-    public function delete(Request $request, Compte $compte): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$compte->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($compte);
-            $entityManager->flush();
-        }
-        return $this->redirectToRoute('compte_index');
-    }
+   
 }
