@@ -141,16 +141,26 @@ class UtilisateurController extends AbstractController
             'utilisateur' => $utilisateur,
         ]);
     }
-/**
-     * @Route("/{id}/edit", name="utilisateur_edit", methods={"GET","POST"})
+    /**
+     * @Route("/{id}/bloquer", name="utilisateur_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Utilisateur $utilisateur): Response
+    public function bloquer(Request $request, Utilisateur $utilisateur): Response
     {
-        $form = $this->createForm(UtilisateurType::class, $utilisateur);
-        $data = json_decode($request->getContent(), true);
-        $form->handleRequest($request);
-        $form->Submit($data);
+        if($utilisateur->getUsername()=='makam12'){
+            return new Response('Vous ne pouvez pas bloquer le super admin', Response::HTTP_CREATED);
+        }
+        $utilisateur->setStatut('bloqué');
         $this->getDoctrine()->getManager()->flush();
-        return new Response('Modification effectif ', Response::HTTP_CREATED);
+        return new Response('Utilisateur bloqué', Response::HTTP_CREATED);
+    }
+    /**
+     * @Route("/{id}/user/compte", name="utilisateur_edit", methods={"GET","POST"})
+     */
+    public function compte(Request $request, Utilisateur $utilisateur): Response
+    {
+        $compte=$utilisateur->getPartenaire()->getComptes()[0];
+        $utilisateur->setCompte($compte);
+        $this->getDoctrine()->getManager()->flush();
+        return new Response('Le compte a été affecté à l\'utilisateur', Response::HTTP_CREATED);
     }
 }

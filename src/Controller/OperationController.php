@@ -2,10 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Frais;
 use App\Entity\Client;
 use App\Form\ClientType;
 use App\Entity\Operation;
+use App\Entity\Commission;
 use App\Form\OperationType;
+use App\Form\CommissionType;
 use App\Repository\OperationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,9 +33,9 @@ class OperationController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="operation_new", methods={"GET","POST"})
+     * @Route("/envoi", name="operation_new", methods={"GET","POST"})
      */
-    public function new(Request $request,EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
+    public function envoi(Request $request,EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
     {
         $id=$this->getUser()->getId();
         $part=$this->getUser()->getPartenaire()->getId();
@@ -47,45 +50,36 @@ class OperationController extends AbstractController
         $form1->handleRequest($request);
         $form1->submit($data);
         $operation->setDate(new \Datetime());
-        $operation->setCode();
+        $code=$this->getDoctrine()->getRepository(Operation::class)->findAll();
+        $idcode=0;
+        foreach ($code as $key => $value) {
+            $idcode=$code[id];
+        }
+        $operation->setCode($id.$part.date("Y").date("m"));
+        $frais=$this->getDoctrine()->getRepository(Frais::class)->findAll();
+        $mfrai=0;
+        foreach ($frais as $key => $value) {
+            $mfrais=$frais[de];
+        }
        
 
-        $username = new Utilisateur();
-        $form2= $this->createForm(UtilisateurType::class, $username);
+        $commission = new Commission();
+        $form2= $this->createForm(CommissionType::class, $commission);
         $form2->handleRequest($request);
-        $file=$request->files->all()['imageFile'];
         $form2->submit($data);
-        $username->setStatut("actif");
-        $username->setRoles(["ROLE_ADMIN"]);
-        $hash = $encoder->encodePassword($username, $username->getPassword());
-        $username->setPassword($hash);
-        $username->setImageFile($file);
-        $username->setUpdatedAt(new \DateTime);
-        $username->setPartenaire($partenaire);
-        $username->setCompte($compte);
+        $commission->setEtat(($mfrais*40)/100);
+        $commission->setSysteme(($mfrais*40)/100);
+        $commission->setPartenaire(($mfrais*40)/100);
+        $commission->setOperation($operation);
         $entityManager = $this->getDoctrine()->getManager();
-        $errors = $validator->validate($partenaire);
-        if(count($errors)) {
-            $errors = $serializer->serialize($errors, 'json');
-            return new Response($errors, 500, [
-                'Content-Type'=>  'application/json'
-            ]);
-        }
-        $m = $validator->validate($username);
-            if(count($m)) {
-                $m = $serializer->serialize($m, 'json');
-                return new Response($m, 500, [
-                    'Content-Type'=>  'application/json'
-                ]);
-            }
-
+        
         $entityManager->persist($commission);
         $entityManager->persist($client);
         $entityManager->persist($operation);
 
         $entityManager->flush();
 
-        return new Response('Partenaire, compte et admin associé ajouté', Response::HTTP_CREATED);
+        return new Response('Envoi reussi le code est :',$code, Response::HTTP_CREATED);
     }
 
     /**

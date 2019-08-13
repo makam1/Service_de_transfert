@@ -19,6 +19,9 @@ use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
 
 
 
@@ -32,6 +35,7 @@ class PartenaireController extends AbstractController
      */
     public function index(PartenaireRepository $partenaireRepository): Response
     {
+        
         return $this->render('partenaire/index.html.twig', [
             'partenaires' => $partenaireRepository->findAll(),
         ]);
@@ -105,27 +109,42 @@ class PartenaireController extends AbstractController
      */
     public function show(Partenaire $partenaire): Response
     {
-        return $this->render('partenaire/show.html.twig', [
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'Arial');
+        
+        // Instantiate Dompdf with our options
+        $dompdf = new Dompdf($pdfOptions);
+        
+        // Retrieve the HTML generated in our twig file
+        $html = $this->renderView('partenaire/show.html.twig', [
             'partenaire' => $partenaire,
         ]);
-    }
+        
+        // Load HTML to Dompdf
+        $dompdf->loadHtml($html);
+        
+        // (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
+        $dompdf->setPaper('A4', 'portrait');
 
+        // Render the HTML as PDF
+        $dompdf->render();
+
+        // Output the generated PDF to Browser (force download)
+        $dompdf->stream("contrat.pdf", [
+            "Attachment" => false
+        ]);
+        
+    }
 
     /**
      * @Route("/{id}/bloquer", name="partenaire_edit", methods={"GET","POST"})
      */
     public function bloquer(Request $request, Partenaire $partenaire): Response
     {
-        $form = $this->createForm(PartenaireType::class, $partenaire);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-            return $this->redirectToRoute('partenaire_index');
-        }
-        return $this->render('partenaire/edit.html.twig', [
-            'partenaire' => $partenaire,
-            'form' => $form->createView(),
-        ]);
+        $partenaire->setStatut('bloqué');
+        $this->getDoctrine()->getManager()->flush();
+        return new Response('Partenaire bloqué', Response::HTTP_CREATED);
+    
     }
    
 }

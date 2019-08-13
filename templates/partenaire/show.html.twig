@@ -3,32 +3,41 @@
 {% block title %}Partenaire{% endblock %}
 
 {% block body %}
-    <h1>Partenaire</h1>
+    <h1>Contrat de prestation de service</h1>
+  
+Entre les soussignés :<br>
+La société <strong>Nei-Yawi-Service</strong>,Société <strong>SARL</strong> au capital de 10.000.000 FCFA , dont le siège social est à <strong>Mermoz</strong>, sous le numéro <strong>12349876AW</strong>, représentée par <strong>Mlle Maïrame Aïssatou KANE</strong> PDG,ci-après désignée <strong>« Le Client »</strong><br>
+d'une part,<br>
+et<br>
+La société <strong>{{ partenaire.raisonsociale }}</strong>, Société <strong>SA</strong> au capital de 500.000 FCFA , dont le siège social est à <strong>{{ partenaire.adresse }}</strong> ,<br> sous le numéro <strong>{{ partenaire.ninea }}</strong> ci-après dénommée « le Prestataire de services » ou <strong>« le Prestataire »</strong>,<br>d'autre part <br><br>
+<strong>Article 1</strong><br>
+Le Client confie au Prestataire une mission consistant à assurer un service de transfert d’argent aux<br> personnes désirant envoyer ou retirer de l’argent avec Nei-Yawi-Transfert.<br>
+Dans le cadre de cette mission, le Prestataire s'engage à mettre ses collaborateurs à la disposition du<br> Client si cela est nécessaire pour la bonne exécution de la mission. Cependant, lesdits<br> salariés resteront sous l'autorité et sous la responsabilité du Prestataire pendant leur intervention<br> chez le Client. <br><br>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ partenaire.id }}</td>
-            </tr>
-            <tr>
-                <th>Raisonsociale</th>
-                <td>{{ partenaire.raisonsociale }}</td>
-            </tr>
-            <tr>
-                <th>Ninea</th>
-                <td>{{ partenaire.ninea }}</td>
-            </tr>
-            <tr>
-                <th>Adresse</th>
-                <td>{{ partenaire.adresse }}</td>
-            </tr>
-        </tbody>
-    </table>
+<strong>Article 2</strong><br>
+Pour toute transaction effectuer le client obtient une commission de % s’il s’agit d’un envoi et de %<br> s’il s’agit d’un retrait, l’État a une commission de  % et le système une commission de %.<br><br>
 
-    <a href="{{ path('partenaire_index') }}">back to list</a>
+<strong>Article 3</strong><br>
+Il est rappelé que le Prestataire est tenu à une obligation de moyens. Il doit donc exécuter sa mission<br> conformément aux règles en vigueur dans sa profession et en se conformant à toutes<br> les données acquises dans son domaine de compétence.<br>
+Il reconnaît que le Client lui a donné une information complète sur ses besoins et sur les impératifs<br> à respecter.<br>
+Il s'engage à se conformer au règlement intérieur et aux consignes de sécurité applicables chez le<br> Client.<br>
+Enfin, il s’engage à observer la confidentialité la plus totale en ce qui concerne le contenu de la<br> mission et toutes les informations ainsi que tous les documents que le Client lui aura communiqués.<br><br>
 
-    <a href="{{ path('partenaire_edit', {'id': partenaire.id}) }}">edit</a>
+<strong>Article 4 </strong><br>
+Afin de permettre au Prestataire de réaliser la mission dans de bonnes conditions, le Client s’engage<br> à lui remettre tous les documents nécessaires dans les meilleurs délais.<br><br>
 
-    {{ include('partenaire/_delete_form.html.twig') }}
+
+<strong>Article 5 </strong><br>
+La responsabilité du Prestataire ne pourra être mise en cause qu'en cas de manquement à son<br> obligation de moyens. En outre, le Client ne pourra pas l'invoquer dans les cas suivants:<br>
+    • s'il a omis de remettre au Prestataire un document ou une information nécessaire pour la<br> mission,<br>
+    • en cas de force majeure ou d'autres causes indépendantes de la volonté du Prestataire.<br><br><br><br><br><br><br><br>
+
+<strong>Article 6</strong><br>
+Le présent contrat est assujetti au droit français. Tout litige qui résulterait de son exécution sera<br> soumis aux tribunaux dont dépend le siège social du Prestataire.<br><br>
+Fait le en deux exemplaires à Dakar<br>
+ 
+<strong>Le Prestataire</strong>               <strong>Le Client</strong><br>
+{{ partenaire.raisonsociale }}					Nei-Yawi-Transfert
+
+    
 {% endblock %}
