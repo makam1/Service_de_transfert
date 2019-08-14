@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
- * @Route("/operation")
+ * @Route("api/operation")
  */
 class OperationController extends AbstractController
 {
@@ -33,12 +33,14 @@ class OperationController extends AbstractController
     }
 
     /**
-     * @Route("/envoi", name="operation_new", methods={"GET","POST"})
+     * @Route("/envoi", name="operation_envoi", methods={"GET","POST"})
      */
     public function envoi(Request $request,EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
     {
+        $user=$this->getUser();
         $id=$this->getUser()->getId();
         $part=$this->getUser()->getPartenaire()->getId();
+  
         $client = new Client();
         $form = $this->createForm(ClientType::class, $client);
         $form->handleRequest($request);
@@ -50,26 +52,21 @@ class OperationController extends AbstractController
         $form1->handleRequest($request);
         $form1->submit($data);
         $operation->setDate(new \Datetime());
-        $code=$this->getDoctrine()->getRepository(Operation::class)->findAll();
-        $idcode=0;
-        foreach ($code as $key => $value) {
-            $idcode=$code[id];
-        }
         $operation->setCode($id.$part.date("Y").date("m"));
-        $frais=$this->getDoctrine()->getRepository(Frais::class)->findAll();
-        $mfrai=0;
-        foreach ($frais as $key => $value) {
-            $mfrais=$frais[de];
-        }
-       
+        $operation->setUtilisateur($user);
+        $operation->setClient($client);
 
+
+        $compte= $user->getCompte();
+        $compte->setSolde($compte->getSolde()+$operation->getMontant());
+       
         $commission = new Commission();
         $form2= $this->createForm(CommissionType::class, $commission);
         $form2->handleRequest($request);
         $form2->submit($data);
-        $commission->setEtat(($mfrais*40)/100);
-        $commission->setSysteme(($mfrais*40)/100);
-        $commission->setPartenaire(($mfrais*40)/100);
+        $commission->setEtat(($operation->getFrais()*40)/100);
+        $commission->setSysteme(($operation->getFrais()*40)/100);
+        $commission->setPartenaire(($operation->getFrais()*40)/100);
         $commission->setOperation($operation);
         $entityManager = $this->getDoctrine()->getManager();
         
@@ -79,7 +76,46 @@ class OperationController extends AbstractController
 
         $entityManager->flush();
 
-        return new Response('Envoi reussi le code est :',$code, Response::HTTP_CREATED);
+        return new Response('Envoi reussi le code est :', Response::HTTP_CREATED);
+    }
+    /**
+     * @Route("/retait", name="operation_retrait", methods={"GET","POST"})
+     */
+    public function retrait(Request $request,EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
+    {
+        $user=$this->getUser();
+        $id=$this->getUser()->getId();
+        $part=$this->getUser()->getPartenaire()->getId();
+
+        $operation = new Operation();
+        $form1 = $this->createForm(OperationType::class, $operation);
+        $form1->handleRequest($request);
+        $form1->submit($data);
+        $operation->setDate(new \Datetime());
+        
+        $operation->setUtilisateur($user);
+        $operation->setClient($client);
+
+
+        $compte= $user->getCompte();
+        $compte->setSolde($compte->getSolde()+$operation->getMontant());
+       
+        $commission = new Commission();
+        $form2= $this->createForm(CommissionType::class, $commission);
+        $form2->handleRequest($request);
+        $form2->submit($data);
+        $commission->setEtat(($operation->getFrais()*40)/100);
+        $commission->setSysteme(($operation->getFrais()*40)/100);
+        $commission->setPartenaire(($operation->getFrais()*40)/100);
+        $commission->setOperation($operation);
+        $entityManager = $this->getDoctrine()->getManager();
+        
+        $entityManager->persist($commission);
+        $entityManager->persist($operation);
+
+        $entityManager->flush();
+
+        return new Response('Retrait effectué', Response::HTTP_CREATED);
     }
 
     /**
@@ -112,17 +148,4 @@ class OperationController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/{id}", name="operation_delete", methods={"DELETE"})
-     */
-    public function delete(Request $request, Operation $operation): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$operation->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($operation);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('operation_index');
-    }
 }

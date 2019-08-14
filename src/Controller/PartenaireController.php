@@ -137,13 +137,23 @@ class PartenaireController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/bloquer", name="partenaire_edit", methods={"GET","POST"})
+     * @Route("/{id}/bloquer", name="bloquer", methods={"GET","POST"})
      */
     public function bloquer(Request $request, Partenaire $partenaire): Response
     {
         $partenaire->setStatut('bloqué');
         $this->getDoctrine()->getManager()->flush();
         return new Response('Partenaire bloqué', Response::HTTP_CREATED);
+    
+    }
+    /**
+     * @Route("/{id}/activer", name="activer", methods={"GET","POST"})
+     */
+    public function activer(Request $request, Partenaire $partenaire): Response
+    {
+        $partenaire->setStatut('actif');
+        $this->getDoctrine()->getManager()->flush();
+        return new Response('Partenaire débloqué', Response::HTTP_CREATED);
     
     }
    

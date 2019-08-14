@@ -36,7 +36,7 @@ class Client
     /**
      * @ORM\Column(type="integer")
      */
-    private $NCIenvoyeur;
+    private $ncienvoyeur;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -56,7 +56,7 @@ class Client
     /**
      * @ORM\Column(type="integer")
      */
-    private $CNIbeneficiaire;
+    private $ncibeneficiaire;
 
     public function getId(): ?int
     {
@@ -99,14 +99,14 @@ class Client
         return $this;
     }
 
-    public function getNCIenvoyeur(): ?int
+    public function getNcienvoyeur(): ?int
     {
-        return $this->NCIenvoyeur;
+        return $this->ncienvoyeur;
     }
 
-    public function setNCIenvoyeur(int $NCIenvoyeur): self
+    public function setNcienvoyeur(int $ncienvoyeur): self
     {
-        $this->NCIenvoyeur = $NCIenvoyeur;
+        $this->ncienvoyeur = $ncienvoyeur;
 
         return $this;
     }
@@ -147,14 +147,14 @@ class Client
         return $this;
     }
 
-    public function getCNIbeneficiaire(): ?int
+    public function getNcibeneficiaire(): ?int
     {
-        return $this->CNIbeneficiaire;
+        return $this->ncibeneficiaire;
     }
 
-    public function setCNIbeneficiaire(int $CNIbeneficiaire): self
+    public function setNcibeneficiaire(int $ncibeneficiaire): self
     {
-        $this->CNIbeneficiaire = $CNIbeneficiaire;
+        $this->ncibeneficiaire = $ncibeneficiaire;
 
         return $this;
     }

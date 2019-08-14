@@ -15,11 +15,11 @@ class ClientType extends AbstractType
             ->add('nomenvoyeur')
             ->add('prenomenvoyeur')
             ->add('telephoneenvoyeur')
-            ->add('NCIenvoyeur')
+            ->add('ncienvoyeur')
             ->add('nombeneficiaire')
             ->add('prenombeneficiaire')
             ->add('telephonebeneficiaire')
-            ->add('CNIbeneficiaire')
+            ->add('ncibeneficiaire')
         ;
     }
 

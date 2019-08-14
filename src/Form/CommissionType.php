@@ -11,12 +11,7 @@ class CommissionType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('etat')
-            ->add('systeme')
-            ->add('partenaire')
-            ->add('operation')
-        ;
+       
     }
 
     public function configureOptions(OptionsResolver $resolver)

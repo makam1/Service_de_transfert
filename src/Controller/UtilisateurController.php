@@ -142,7 +142,7 @@ class UtilisateurController extends AbstractController
         ]);
     }
     /**
-     * @Route("/{id}/bloquer", name="utilisateur_edit", methods={"GET","POST"})
+     * @Route("/{id}/bloquer", name="utilisateur_bloquer", methods={"GET","POST"})
      */
     public function bloquer(Request $request, Utilisateur $utilisateur): Response
     {
@@ -152,6 +152,16 @@ class UtilisateurController extends AbstractController
         $utilisateur->setStatut('bloqué');
         $this->getDoctrine()->getManager()->flush();
         return new Response('Utilisateur bloqué', Response::HTTP_CREATED);
+    }
+    /**
+     * @Route("/{id}/activer", name="utilisateur_activer", methods={"GET","POST"})
+     */
+    public function activer(Request $request, Utilisateur $utilisateur): Response
+    {
+        
+        $utilisateur->setStatut('actif');
+        $this->getDoctrine()->getManager()->flush();
+        return new Response('Utilisateur débloqué', Response::HTTP_CREATED);
     }
     /**
      * @Route("/{id}/user/compte", name="utilisateur_edit", methods={"GET","POST"})
