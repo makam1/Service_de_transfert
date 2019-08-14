@@ -29,7 +29,7 @@ class Operation
     private $montant;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="bigint")
      */
     private $code;
 

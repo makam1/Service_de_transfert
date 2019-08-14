@@ -20,7 +20,6 @@ class OperationType extends AbstractType
                 'class'=> Type::class,
                 'choice_label'=> 'type_id'
             ])
-            ->add('frais')
         ;
     }
 
