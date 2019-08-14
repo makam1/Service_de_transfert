@@ -32,7 +32,7 @@ class AppFixtures extends Fixture
         $admin->setEmail("mak@gmail.com");
         $admin->setTelephone(778900987);
         $admin->setStatut('actif');
-        $admin->setImageName("png");
+        $admin->setImageName("image.png");
         $admin->setUpdatedAt(new \DateTime());
         $admin->setRoles(["ROLE_SUPERADMIN"]);
         $admin->setPassword($this->passwordEncoder->encodePassword($admin,'passer123'));
@@ -46,7 +46,7 @@ class AppFixtures extends Fixture
         $caissier->setTelephone(778900987);
         $caissier->setStatut('actif');
         $caissier->setRoles(["ROLE_CAISSIER"]);
-        $caissier->setImageName("png");
+        $caissier->setImageName("image.png");
         $caissier->setUpdatedAt(new \DateTime());
         $caissier->setPassword($this->passwordEncoder->encodePassword($admin,'passer123'));
         $caissier->setPartenaire($partenaire);

@@ -83,39 +83,7 @@ class OperationController extends AbstractController
      */
     public function retrait(Request $request,EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
     {
-        $user=$this->getUser();
-        $id=$this->getUser()->getId();
-        $part=$this->getUser()->getPartenaire()->getId();
-
-        $operation = new Operation();
-        $form1 = $this->createForm(OperationType::class, $operation);
-        $form1->handleRequest($request);
-        $form1->submit($data);
-        $operation->setDate(new \Datetime());
         
-        $operation->setUtilisateur($user);
-        $operation->setClient($client);
-
-
-        $compte= $user->getCompte();
-        $compte->setSolde($compte->getSolde()+$operation->getMontant());
-       
-        $commission = new Commission();
-        $form2= $this->createForm(CommissionType::class, $commission);
-        $form2->handleRequest($request);
-        $form2->submit($data);
-        $commission->setEtat(($operation->getFrais()*40)/100);
-        $commission->setSysteme(($operation->getFrais()*40)/100);
-        $commission->setPartenaire(($operation->getFrais()*40)/100);
-        $commission->setOperation($operation);
-        $entityManager = $this->getDoctrine()->getManager();
-        
-        $entityManager->persist($commission);
-        $entityManager->persist($operation);
-
-        $entityManager->flush();
-
-        return new Response('Retrait effectué', Response::HTTP_CREATED);
     }
 
     /**
