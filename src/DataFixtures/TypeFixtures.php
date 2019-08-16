@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Tpe;
+use App\Entity\Type;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
@@ -16,7 +16,7 @@ class TypeFixtures extends Fixture
         $manager->persist($envoi);
 
         $retrait = new Type();
-        $retrait->setLibelle("retrait");
+        $retrait->setLibelle("envoi");
         
         $manager->persist($retrait);
 

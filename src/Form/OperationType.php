@@ -16,6 +16,7 @@ class OperationType extends AbstractType
         $builder
            
             ->add('montant')
+            ->add('code')
             ->add('type',EntityType::class,[
                 'class'=> Type::class,
                 'choice_label'=> 'type_id'

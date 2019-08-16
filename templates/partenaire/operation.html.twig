@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}operation Operation{% endblock %}
+
+{% block body %}
+    <h1>Operations du operation</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Utilisateur</th>
+                <th>Type</th>
+                <th>Date</th>
+                <th>Montant</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for operation in operations %}
+            <tr>
+                <td>{{ operation.utilisateur.username }}</td>
+                <td>{{ operation.type.libelle }}</td>
+                <td>{{ operation.date|date("m/d/Y") }}</td>
+                <td>{{ operation.montant }}</td>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

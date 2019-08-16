@@ -1,5 +1,7 @@
 <?php
 namespace App\Controller;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use App\Entity\Compte;
 use App\Form\CompteType;
 use App\Entity\Partenaire;
@@ -7,6 +9,7 @@ use App\Entity\Utilisateur;
 use App\Form\PartenaireType;
 use App\Form\UtilisateurType;
 use App\Repository\CompteRepository;
+use App\Repository\OperationRepository;
 use App\Repository\PartenaireRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\UtilisateurRepository;
@@ -19,8 +22,6 @@ use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Dompdf\Dompdf;
-use Dompdf\Options;
 
 
 
@@ -40,13 +41,27 @@ class PartenaireController extends AbstractController
             'partenaires' => $partenaireRepository->findAll(),
         ]);
     }
+    /**
+     * @Route("/operation", name="partenaire_operation", methods={"GET"})
+     */
+    public function operation(OperationRepository $operationRepository): Response
+    {
+        
+        $part=$this->getUser()->getPartenaire()->getId();    
+        $users=$this->getDoctrine()->getRepository(Utilisateur::class)->findBy(array('partenaire'=>$part));
+            var_dump($users);die();
 
+        return $this->render('partenaire/operation.html.twig', [
+            'operations' => $operationRepository->findAll(),
+        ]);
+    }
 
     /**
      * @Route("/new", name="partenaire_new", methods={"GET","POST"})
      */
     public function new( UserPasswordEncoderInterface $encoder,Request $request,UserPasswordEncoderInterface $passwordEncoder,SerializerInterface $serializer,EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
     {
+        
         $partenaire = new Partenaire();
         $form = $this->createForm(PartenaireType::class, $partenaire);
         $form->handleRequest($request);
@@ -106,7 +121,7 @@ class PartenaireController extends AbstractController
 
 
     /** @Route("/{id}", name="partenaire_show", methods={"GET"})
-     */
+    */
     public function show(Partenaire $partenaire): Response
     {
         $pdfOptions = new Options();

@@ -24,7 +24,7 @@ class Operation
     private $date;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $montant;
 
@@ -46,7 +46,7 @@ class Operation
     private $type;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Client", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Client", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $client;

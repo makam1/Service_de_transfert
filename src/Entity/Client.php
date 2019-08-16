@@ -54,10 +54,11 @@ class Client
     private $telephonebeneficiaire;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $ncibeneficiaire;
 
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -152,10 +153,12 @@ class Client
         return $this->ncibeneficiaire;
     }
 
-    public function setNcibeneficiaire(int $ncibeneficiaire): self
+    public function setNcibeneficiaire(?int $ncibeneficiaire): self
     {
         $this->ncibeneficiaire = $ncibeneficiaire;
 
         return $this;
     }
+
+    
 }

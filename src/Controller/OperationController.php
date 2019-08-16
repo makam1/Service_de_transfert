@@ -46,6 +46,7 @@ class OperationController extends AbstractController
         if($compte->getSolde()>=10000){
         $client = new Client();
         $form = $this->createForm(ClientType::class, $client);
+        $client->setNcibeneficiaire(1) ;
         $form->handleRequest($request);
         $data=$request->request->all();
         $form->submit($data);
@@ -58,7 +59,7 @@ class OperationController extends AbstractController
         $form1->submit($data);
         $montant=$operation->getMontant();
 
-        if($montant<=$compte->getSolde()){
+        if($montant<=$compte->getSolde() && $montant>500){
 
         $frais=$this->getDoctrine()->getRepository(Frais::class)->findAll();
         $f=0;
@@ -75,7 +76,6 @@ class OperationController extends AbstractController
                 $i=$value->getId()+1;
                 
         }
-
 
         $operation->setDate(new \Datetime());
         $code=$id.$part.$i.date("Y").date("m");
@@ -109,7 +109,7 @@ class OperationController extends AbstractController
 
         return new Response('Envoi reussi le code est :'.$code, Response::HTTP_CREATED);
         }else{
-            return new Response('Vous ne pouvez pas faire d\'envoi votre compte est bas', Response::HTTP_CREATED);
+            return new Response('Vous ne pouvez pas faire d\'envoi le solde de votre compte est bas', Response::HTTP_CREATED);
 
         }
     }
@@ -119,20 +119,65 @@ class OperationController extends AbstractController
      */
     public function retrait(Request $request,EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
     {
+        $id=$this->getUser();
+        $compte= $this->getUser()->getCompte();
         $operation = new Operation();
         $form = $this->createForm(OperationType::class, $operation);
-
-        $montant=$this->getDoctrine()->getRepository(Operation::class)->findAll();
         $data=$request->request->all();
         $form->handleRequest($request);
         $form->submit($data);
-       
-       
+        $op=$this->getDoctrine()->getRepository(Operation::class)->findBy(array('code'=>$operation->getCode()));
+
+        if($op==null){
+            return new Response('Ce code est erroné, veuillez réessayer', Response::HTTP_CREATED);
+
+        }else{
+            
+
+        if(count($op)>1){
+            return new Response('Cet envoi a déja été retiré', Response::HTTP_CREATED);
+
+        }else{
+            var_dump($op[0]->getMontant());
+            $client =$this->getDoctrine()->getRepository(Client::class)->findBy(array('id'=>$op[0]->getClient()));
+            $operation->setDate(new \Datetime());
+            $operation->setUtilisateur($id);
+            $operation->setMontant($op[0]->getMontant());
+            $operation->setClient($op[0]->getClient());
+            $operation->setCode($op[0]->getCode());
+            $operation->setFrais($op[0]->getFrais());
+           
+            $f=$op[0]->getFrais();
+            $compte->setSolde($compte->getSolde()+$operation->getMontant());
+
+            $commission = new Commission();
+            $form2= $this->createForm(CommissionType::class, $commission);
+            $form2->handleRequest($request);
+            $form2->submit($data);
+            $commission->setEtat(0);
+            $commission->setSysteme(0);
+            $commission->setPartenaire(($f*10)/100);
+            $commission->setOperation($operation);
+            $entityManager = $this->getDoctrine()->getManager();
+
+            $cl = new Client();
+            $form2= $this->createForm(ClientType::class, $cl);
+            $form2->handleRequest($request);
+            $form2->submit($data);
+            $client[0]->setNcibeneficiaire($cl->getNcibeneficiaire());
+
         
-        $operation->setDate(new \Datetime());
+            $entityManager->persist($commission);
+
+            $entityManager->persist($operation);
+    
+            $entityManager->flush();
+
+            return new Response('Retrait effectué avec succés', Response::HTTP_CREATED);
         
-        $operation->setUtilisateur($user);
-        $operation->setClient($client);
+            }
+
+        }
 
     }
 
