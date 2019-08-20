@@ -3,11 +3,13 @@ namespace App\Controller;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use App\Entity\Compte;
+use App\Form\DateType;
 use App\Form\CompteType;
 use App\Entity\Partenaire;
 use App\Entity\Utilisateur;
 use App\Form\PartenaireType;
 use App\Form\UtilisateurType;
+use App\Form\ListeOperationType;
 use App\Repository\CompteRepository;
 use App\Repository\OperationRepository;
 use App\Repository\PartenaireRepository;
@@ -44,15 +46,23 @@ class PartenaireController extends AbstractController
     /**
      * @Route("/operation", name="partenaire_operation", methods={"GET"})
      */
-    public function operation(OperationRepository $operationRepository): Response
+    public function operation(OperationRepository $operationRepository,Request $request): Response
     {
-        
+       
+        $form = $this->createForm(ListeOperationType::class);
+        $form->handleRequest($request);
+        $data=$request->request->all();
+        $form->submit($data);
         $part=$this->getUser()->getPartenaire()->getId();    
         $users=$this->getDoctrine()->getRepository(Utilisateur::class)->findBy(array('partenaire'=>$part));
-            var_dump($users);die();
+        
+        $oprepo=$operationRepository->findBy(array('utilisateur'=>$users));
+
+        
+        var_dump($oprepo);die();
 
         return $this->render('partenaire/operation.html.twig', [
-            'operations' => $operationRepository->findAll(),
+            'operations' => $oprepo,
         ]);
     }
 
