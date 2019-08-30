@@ -24,7 +24,7 @@ use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 
 
@@ -35,35 +35,33 @@ class PartenaireController extends AbstractController
 {
     /**
      * @Route("/", name="partenaire_index", methods={"GET"})
+     *  
      */
-    public function index(PartenaireRepository $partenaireRepository): Response
+    public function index(PartenaireRepository $partenaireRepository,SerializerInterface $serializer): Response
     {
-        
-        return $this->render('partenaire/index.html.twig', [
-            'partenaires' => $partenaireRepository->findAll(),
+        $part=$partenaireRepository->findAll();
+        $data = $serializer->serialize($part, 'json',['groups' => ['listes']]);
+        return new Response($data, 200, [
+            'Content-Type'=>  'application/json'
         ]);
+        //@Security("has_role('ROLE_SUPERADMIN')")
     }
     /**
      * @Route("/operation", name="partenaire_operation", methods={"GET"})
      */
-    public function operation(OperationRepository $operationRepository,Request $request): Response
+    public function operation(OperationRepository $operationRepository,SerializerInterface $serializer): Response
     {
        
-        $form = $this->createForm(ListeOperationType::class);
-        $form->handleRequest($request);
-        $data=$request->request->all();
-        $form->submit($data);
         $part=$this->getUser()->getPartenaire()->getId();    
         $users=$this->getDoctrine()->getRepository(Utilisateur::class)->findBy(array('partenaire'=>$part));
         
         $oprepo=$operationRepository->findBy(array('utilisateur'=>$users));
 
-        
-        var_dump($oprepo);die();
+        // $data = $serializer->normalize($oprepo, null, ['groups' => ['listes']]);
 
-        return $this->render('partenaire/operation.html.twig', [
-            'operations' => $oprepo,
-        ]);
+        $data = $serializer->serialize($oprepo, 'json',['groups' => ['listes']]);
+
+        return new JsonResponse($data, 200);
     }
 
     /**
@@ -158,7 +156,7 @@ class PartenaireController extends AbstractController
         $dompdf->stream("contrat.pdf", [
             "Attachment" => false
         ]);
-        
+ 
     }
 
     /**

@@ -8,6 +8,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 
 
@@ -20,6 +22,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 class Partenaire
 {
     /**
+     * @Groups({"listes"})
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -27,6 +30,7 @@ class Partenaire
     private $id;
 
     /**
+     * @Groups({"listes"})
      * @ORM\Column(type="string", length=30)
      * @Assert\NotBlank(message="Ce champ ne doit pas être vide")
      * @Assert\Length(min="7",minMessage="La longueur minimale de la raison sociale est de 7",max="30",maxMessage="La longueur maximale la raison sociale est de 30")
@@ -37,6 +41,7 @@ class Partenaire
     private $raisonsociale;
 
     /**
+     * @Groups({"listes"})
      * @ORM\Column(type="string", length=10, unique=true)
      * @Assert\NotBlank(message="Ce champ ne doit pas être vide")
      * @Assert\Length(min="10",max="10",minMessage="La longueur du ninea est de 10")
@@ -47,6 +52,7 @@ class Partenaire
     private $ninea;
 
     /**
+     * @Groups({"listes"})
      * @ORM\Column(type="string", length=20)
      * @Assert\NotBlank(message="Ce champ ne doit pas être vide")
      * @Assert\Type(

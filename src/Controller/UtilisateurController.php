@@ -108,6 +108,8 @@ class UtilisateurController extends AbstractController
         $utilisateur = new Utilisateur();
         $form = $this->createForm(UtilisateurType::class, $utilisateur);
         $form->handleRequest($request);
+        $id=$this->getUser()->getPartenaire();
+
         $data=$request->request->all();
         $file=$request->files->all()['imageFile'];
         $form->submit($data);
@@ -115,6 +117,7 @@ class UtilisateurController extends AbstractController
         $hash = $encoder->encodePassword($utilisateur, $utilisateur->getPassword());
         $utilisateur->setPassword($hash);
         $utilisateur->setStatut("actif");
+        $utilisateur->setPartenaire($id);
         $utilisateur->setImageFile($file);
         $utilisateur->setUpdatedAt(new \DateTime);
         $entityManager = $this->getDoctrine()->getManager();

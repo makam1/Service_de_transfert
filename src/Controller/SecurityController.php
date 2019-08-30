@@ -30,7 +30,9 @@ class SecurityController extends AbstractController
     /**
      *@Route("/creer", name="creer", methods={"POST"})
      */
+    
   public function creer(Request $request,UserPasswordEncoderInterface $passwordEncoder,EntityManagerInterface $entityManager, ValidatorInterface $validator,SerializerInterface $serializer){
+    
     $values=json_decode($request->getContent());
     if(isset($values->username)){
 
@@ -67,23 +69,6 @@ class SecurityController extends AbstractController
 
     }
      
-//    /**
-//       @Route("/connexion", name="connexion", methods={"POST"})
-//       @return JsonResponse
-//      /
-//     public function connexion():JsonResponse
-//     {    
-
-//         $username =$this->getUser(); 
-       
-//         return $this->json([
-//             'username' => $username->getUsername(),
-//             'roles' => $username->getRoles(),
-//             'statut' => $username->getStatut(),
-//         ]);  
-        
-//     }
-
    
     private $passwordEncoder;
 
@@ -121,6 +106,8 @@ class SecurityController extends AbstractController
         }
         
         $token = $JWTEncoder->encode([
+                'roles'=>$user->getRoles(),
+                'statut'=>$user->getStatut(),
                 'username' => $user->getUsername(),
                 'exp' => time() + 36000 // 1 hour expiration
             ]);
