@@ -72,6 +72,7 @@ class Partenaire
     private $comptes;
 
     /**
+     * @Groups({"listes"})
      * @ORM\Column(type="string", length=255)
      */
     private $statut;

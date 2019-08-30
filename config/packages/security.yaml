@@ -20,41 +20,40 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        
-
-        main:
-            anonymous:  true
-            json_login:
-                check_path:               /api/login_check
 
         login:
             pattern:  ^/api/login_check
             stateless: true
+            anonymous: true
             json_login:
                 check_path:               /api/login_check
                 success_handler:          lexik_jwt_authentication.handler.authentication_success
                 failure_handler:          lexik_jwt_authentication.handler.authentication_failure
-           
         api:
-            http_basic: ~
-            pattern:   ^/api/t
+            http_basic : ~
+            pattern:   ^/api
             stateless: true
             guard:
                 authenticators:
-                    - lexik_jwt_authentication.jwt_token_authenticator
+                    - lexik_jwt_authentication.jwt_token_authenticator        
+    
+        main:
             anonymous: true
+            json_login:
+                check_path: /api/login_check
+
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/api/creer ,            roles: ROLE_SUPERADMIN }   
-        # - { path: ^/api/partenaire,           roles: ROLE_SUPERADMIN }
-        # - { path: ^/api/compte,               roles: ROLE_SUPERADMIN }
-        # - { path: ^/api/compte,               roles: ROLE_ADMIN }
-        # - { path: ^/api/depot,                roles: ROLE_CAISSIER }
-        # - { path: ^/api/caissier,        roles: ROLE_SUPERADMIN }
-        # - { path: ^/api/user,                 roles: ROLE_ADMIN }
-        # - { path: ^/api/caissier,         roles: ROLE_ADMIN }
-        # - { path: ^/api/admin,        roles: ROLE_ADMIN}
+        - { path: ^/api/creer ,            roles: ROLE_SUPERADMIN }   
+        - { path: ^/api/partenaire,           roles: ROLE_SUPERADMIN }
+        - { path: ^/api/compte,               roles: ROLE_SUPERADMIN }
+        - { path: ^/api/compte,               roles: ROLE_ADMIN }
+        - { path: ^/api/depot,                roles: ROLE_CAISSIER }
+        - { path: ^/api/caissier,        roles: ROLE_SUPERADMIN }
+        - { path: ^/api/user,                 roles: ROLE_ADMIN }
+        - { path: ^/api/caissier,         roles: ROLE_ADMIN }
+        - { path: ^/api/admin,        roles: ROLE_ADMIN}
 
         #- { path: ^/api/user/,                roles: ROLE_ADMIN }  
         #- { path: ^/api,                      roles: ROLE_ADMIN}
