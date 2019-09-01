@@ -24,28 +24,15 @@ use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 
 
 /**
- * @Route("/api/partenaire")
+ * @Route("api/partenaire")
  */
 class PartenaireController extends AbstractController
 {
-    /**
-     * @Route("/", name="partenaire_index", methods={"GET"})
-     *  
-     */
-    public function index(PartenaireRepository $partenaireRepository,SerializerInterface $serializer): Response
-    {
-        $part=$partenaireRepository->findAll();
-        $data = $serializer->serialize($part, 'json',['groups' => ['listes']]);
-        return new Response($data, 200, [
-            'Content-Type'=>  'application/json'
-        ]);
-        //@Security("has_role('ROLE_SUPERADMIN')")
-    }
+
     /**
      * @Route("/operation", name="partenaire_operation", methods={"GET"})
      */
@@ -57,11 +44,26 @@ class PartenaireController extends AbstractController
         
         $oprepo=$operationRepository->findBy(array('utilisateur'=>$users));
 
-        // $data = $serializer->normalize($oprepo, null, ['groups' => ['listes']]);
 
         $data = $serializer->serialize($oprepo, 'json',['groups' => ['listes']]);
 
-        return new JsonResponse($data, 200);
+        return new JsonResponse($data, 200, [
+            'Content-Type'=>  'application/json'
+        ]);
+        
+    }
+    /**
+     * @Route("/liste", name="partenaire_index", methods={"GET"})
+     *  
+     */
+    public function liste(PartenaireRepository $user,SerializerInterface $serializer): Response
+    {
+        $part=$this->getDoctrine()->getRepository(Partenaire::class)->findAll();
+
+        $data = $serializer->serialize($part, 'json',['groups' => ['partenaires']]);
+        return new Response($data, 200, [
+            'Content-Type'=>  'application/json'
+        ]); 
     }
 
     /**

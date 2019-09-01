@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 /**
  * @ApiResource()
@@ -19,39 +21,46 @@ class Operation
     private $id;
 
     /**
+     *  @Groups({"listes"})
      * @ORM\Column(type="datetime")
      */
     private $date;
 
     /**
+     * @Groups({"listes"})
      * @ORM\Column(type="integer", nullable=true)
      */
     private $montant;
 
     /**
+     * @Groups({"listes"})
      * @ORM\Column(type="bigint")
      */
     private $code;
 
     /**
+     * @Groups({"listes"})
      * @ORM\ManyToOne(targetEntity="App\Entity\Utilisateur", inversedBy="operations")
      * @ORM\JoinColumn(nullable=false)
      */
     private $utilisateur;
 
-    /**
+    /** 
+     * @Groups({"listes"})
      * @ORM\ManyToOne(targetEntity="App\Entity\Type", inversedBy="operations")
      * @ORM\JoinColumn(nullable=false)
      */
     private $type;
 
     /**
+     * @Groups({"listes"})
      * @ORM\ManyToOne(targetEntity="App\Entity\Client", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $client;
 
     /**
+     * @Groups({"listes"})
      * @ORM\Column(type="integer")
      */
     private $frais;

@@ -53,7 +53,7 @@ security:
         - { path: ^/api/caissier,        roles: ROLE_SUPERADMIN }
         - { path: ^/api/user,                 roles: ROLE_ADMIN }
         - { path: ^/api/caissier,         roles: ROLE_ADMIN }
-        - { path: ^/api/admin,        roles: ROLE_ADMIN}
+        - { path: ^/api/admin,        roles: ROLE_SUPERADMIN}
 
         #- { path: ^/api/user/,                roles: ROLE_ADMIN }  
         #- { path: ^/api,                      roles: ROLE_ADMIN}

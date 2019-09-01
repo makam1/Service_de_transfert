@@ -22,7 +22,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Partenaire
 {
     /**
-     * @Groups({"listes"})
+     * @Groups({"partenaires"})
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -30,7 +30,7 @@ class Partenaire
     private $id;
 
     /**
-     * @Groups({"listes"})
+     * @Groups({"partenaires"})
      * @ORM\Column(type="string", length=30)
      * @Assert\NotBlank(message="Ce champ ne doit pas être vide")
      * @Assert\Length(min="7",minMessage="La longueur minimale de la raison sociale est de 7",max="30",maxMessage="La longueur maximale la raison sociale est de 30")
@@ -41,7 +41,7 @@ class Partenaire
     private $raisonsociale;
 
     /**
-     * @Groups({"listes"})
+     * @Groups({"partenaires"})
      * @ORM\Column(type="string", length=10, unique=true)
      * @Assert\NotBlank(message="Ce champ ne doit pas être vide")
      * @Assert\Length(min="10",max="10",minMessage="La longueur du ninea est de 10")
@@ -52,7 +52,7 @@ class Partenaire
     private $ninea;
 
     /**
-     * @Groups({"listes"})
+     * @Groups({"partenaires"})
      * @ORM\Column(type="string", length=20)
      * @Assert\NotBlank(message="Ce champ ne doit pas être vide")
      * @Assert\Type(
@@ -62,17 +62,19 @@ class Partenaire
     private $adresse;
 
     /**
+     * @Groups({"partenaires"})
      * @ORM\OneToMany(targetEntity="App\Entity\Utilisateur", mappedBy="partenaire")
      */
     private $utilisateurs;
 
     /**
+     * @Groups({"partenaires"})
      * @ORM\OneToMany(targetEntity="App\Entity\Compte", mappedBy="partenaire")
      */
     private $comptes;
 
     /**
-     * @Groups({"listes"})
+     * @Groups({"partenaires"})
      * @ORM\Column(type="string", length=255)
      */
     private $statut;

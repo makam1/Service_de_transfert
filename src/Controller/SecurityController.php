@@ -27,49 +27,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  */
 class SecurityController extends AbstractController
 {
-    /**
-     *@Route("/creer", name="creer", methods={"POST"})
-     */
     
-  public function creer(Request $request,UserPasswordEncoderInterface $passwordEncoder,EntityManagerInterface $entityManager, ValidatorInterface $validator,SerializerInterface $serializer){
-    
-    $values=json_decode($request->getContent());
-    if(isset($values->username)){
-
-        $username = new Utilisateur();
-
-        $username->setNom($values->nom);
-        $username->setUsername($values->username);
-        $username->setEmail($values->email);
-        $username->setTelephone($values->telephone);
-        $username->setStatut('actif');
-        $username->setRoles(["ROLE_SUPERADMIN"]);
-        $username->setPassword($passwordEncoder->encodePassword($username,$values->password));
-        $errors = $validator->validate($username);
-        if(count($errors)) {
-            $errors = $serializer->serialize($errors, 'json');
-            return new Response($errors, 500, [
-                'Content-Type' => 'application/json'
-            ]);
-        }
-        $entityManager->persist($username);
-        $entityManager->flush();
-        $data = [
-            'status' => 201,
-            'message' => 'Super-admin ajouté'
-        ];
-        return new JsonResponse($data, 201);
-    }
-    $data = [
-        'status' => 500,
-        'message' => 'Vous devez renseigner les informations de l\'admin'
-    ];
-    return new JsonResponse($data, 500);
-
-
-    }
-     
-   
     private $passwordEncoder;
 
     public function __construct(UserPasswordEncoderInterface $passwordEncoder)
@@ -88,10 +46,6 @@ class SecurityController extends AbstractController
     {
         $user = $this->getUser();
        
-        if (!$user) {
-            return new JsonResponse('L\'utilisateur n\'existe pas');
-        }
-
         $isValid =$this->passwordEncoder;
         if (!$isValid) {
             return new JsonResponse('Votre username ou votre mot de passe est incorrect, veuillez saisir à nouveau');
@@ -107,7 +61,7 @@ class SecurityController extends AbstractController
         
         $token = $JWTEncoder->encode([
                 'roles'=>$user->getRoles(),
-                'statut'=>$user->getStatut(),
+                'id'=>$user->getId(),
                 'username' => $user->getUsername(),
                 'exp' => time() + 36000 // 1 hour expiration
             ]);

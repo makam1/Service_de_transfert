@@ -11,6 +11,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 
 /**
@@ -28,6 +30,7 @@ class Utilisateur implements UserInterface
     private $id;
 
     /**
+     *  @Groups({"users"})
      * @ORM\Column(type="string", length=10)
      * @Assert\NotBlank(message="Renseigner le username")
      * @Assert\Length(min="5",minMessage="La longueur du username est de 5",max="10",maxMessage="La longueur du username est de 10")
@@ -39,12 +42,14 @@ class Utilisateur implements UserInterface
    
 
     /**
+     * @Groups({"users"})
      * @ORM\Column(type="json")
      */
     
     private $roles = [];
 
     /**
+     * @Groups({"users"})
      * @var string The hashed password
      * @ORM\Column(type="string")
      * @Assert\NotBlank(message="Renseignez le password")
@@ -53,6 +58,7 @@ class Utilisateur implements UserInterface
     private $password;
 
     /**
+     * @Groups({"users"})
      * @ORM\Column(type="string", length=30)
      * @Assert\NotBlank(message="Renseignez le nom")
      * @Assert\Length(min="2",minMessage="Le nom doit etre long 2 caractères minimum",max="10",maxMessage="Le mot de pase doit etre long 10 caractères maximum")
@@ -63,6 +69,7 @@ class Utilisateur implements UserInterface
     private $nom;
 
     /**
+     * @Groups({"users"})
      * @ORM\Column(type="string", length=40)
      * @Assert\NotBlank(message="Renseignez l'email")
      * @Assert\Length(min="10",minMessage="L'email' doit etre long 10 caractères minimum",max="20",maxMessage="L'email' doit etre long 20 caractères maximum")
@@ -74,6 +81,7 @@ class Utilisateur implements UserInterface
     private $email;
 
     /**
+     * @Groups({"users"})
      * @ORM\Column(type="integer")
      * @Assert\NotBlank(message="Renseignez le téléphone")
      * @Assert\Length(min="9",minMessage="Le téléphone doit etre long 9 caractères minimum",max="9")
@@ -84,6 +92,7 @@ class Utilisateur implements UserInterface
     private $telephone;
 
     /**
+     * @Groups({"users"})
      * @ORM\Column(type="string", length=20)
      * 
      */
@@ -159,7 +168,7 @@ class Utilisateur implements UserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_ADMIN';
+       // $roles[] = 'ROLE_ADMIN';
         return array_unique($roles);
     }
     public function setRoles(array $roles): self

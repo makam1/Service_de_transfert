@@ -21,7 +21,60 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  */
 class UtilisateurController extends AbstractController
 {
-   
+   /**
+     * @Route("/utilisateur", name="utilisateur_liste", methods={"GET"})
+     *  
+     */
+    public function index(UtilisateurRepository $user,SerializerInterface $serializer): Response
+    {
+        $part=$user->findAll();
+        $data = $serializer->serialize($part, 'json',['groups' => ['users']]);
+        return new Response($data, 200, [
+            'Content-Type'=>  'application/json'
+        ]);
+        
+    }
+        /**
+         *@Route("/creer", name="creer", methods={"POST"})
+        */
+    
+        public function creer(Request $request,UserPasswordEncoderInterface $passwordEncoder,EntityManagerInterface $entityManager, ValidatorInterface $validator,SerializerInterface $serializer){
+    
+            $utilisateur = new Utilisateur();
+
+            $id=$this->getUser()->getPartenaire();
+    
+            $form = $this->createForm(UtilisateurType::class, $utilisateur);
+            $form->handleRequest($request);
+            $data=$request->request->all();
+            $file=$request->files->all()['imageFile'];
+            
+            $form->submit($data);
+    
+            $utilisateur->setRoles(["ROLE_SUPERADMIN"]);
+    
+            $hash = $encoder->encodePassword($utilisateur, $utilisateur->getPassword());
+            $utilisateur->setPassword($hash);
+            $utilisateur->setStatut("actif");
+            $utilisateur->setPartenaire($id);
+            $utilisateur->setImageFile($file);
+            $utilisateur->setUpdatedAt(new \DateTime); 
+            $entityManager = $this->getDoctrine()->getManager();
+            $errors = $validator->validate($utilisateur);
+                if(count($errors)) {
+                    $errors = $serializer->serialize($errors, 'json');
+                    return new Response($errors, 500, [
+                        'Content-Type' => 'application/json'
+                    ]);
+                }
+            $entityManager->persist($utilisateur);
+            $entityManager->flush();
+    
+            return new Response('Super admin ajouté', Response::HTTP_CREATED);
+
+
+    }
+     
     /**
      * @Route("/admin", name="admin", methods={"GET","POST"})
      * 
@@ -32,6 +85,7 @@ class UtilisateurController extends AbstractController
        
         $utilisateur = new Utilisateur();
 
+        $id=$this->getUser()->getPartenaire();
 
         $form = $this->createForm(UtilisateurType::class, $utilisateur);
         $form->handleRequest($request);
@@ -45,6 +99,7 @@ class UtilisateurController extends AbstractController
         $hash = $encoder->encodePassword($utilisateur, $utilisateur->getPassword());
         $utilisateur->setPassword($hash);
         $utilisateur->setStatut("actif");
+        $utilisateur->setPartenaire($id);
         $utilisateur->setImageFile($file);
         $utilisateur->setUpdatedAt(new \DateTime); 
         $entityManager = $this->getDoctrine()->getManager();
@@ -152,20 +207,17 @@ class UtilisateurController extends AbstractController
         if($utilisateur->getUsername()=='makam12'){
             return new Response('Vous ne pouvez pas bloquer le super admin', Response::HTTP_CREATED);
         }
+        if($utilisateur->getStatut()=='actif'){
         $utilisateur->setStatut('bloqué');
         $this->getDoctrine()->getManager()->flush();
         return new Response('Utilisateur bloqué', Response::HTTP_CREATED);
-    }
-    /**
-     * @Route("/{id}/activer", name="utilisateur_activer", methods={"GET","POST"})
-     */
-    public function activer(Request $request, Utilisateur $utilisateur): Response
-    {
-        
-        $utilisateur->setStatut('actif');
+        } else{
+            $utilisateur->setStatut('actif');
         $this->getDoctrine()->getManager()->flush();
         return new Response('Utilisateur débloqué', Response::HTTP_CREATED);
+        }  
     }
+    
     /**
      * @Route("/{id}/user/compte", name="utilisateur_edit", methods={"GET","POST"})
      */
