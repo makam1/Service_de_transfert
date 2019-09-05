@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Type;
 use App\Entity\Frais;
 use App\Entity\Client;
 use App\Form\ClientType;
@@ -41,6 +42,8 @@ class OperationController extends AbstractController
         $id=$this->getUser()->getId();
         $part=$this->getUser()->getPartenaire()->getId();
         $compte= $user->getCompte();
+        
+        $type=$this->getDoctrine()->getRepository(Type::class)->findOneBy(array('libelle'=>'envoi'));
 
 
         if($compte->getSolde()>=10000){
@@ -83,7 +86,7 @@ class OperationController extends AbstractController
         $operation->setFrais($f);
         $operation->setUtilisateur($user);
         $operation->setClient($client);
-
+        $operation->setType($type);
 
         $compte->setSolde($compte->getSolde()-$operation->getMontant());
        
@@ -120,6 +123,8 @@ class OperationController extends AbstractController
     public function retrait(Request $request,EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
     {
         $id=$this->getUser();
+        $type=$this->getDoctrine()->getRepository(Type::class)->findOneBy(array('libelle'=>'retrait'));
+
         $compte= $this->getUser()->getCompte();
         $operation = new Operation();
         $form = $this->createForm(OperationType::class, $operation);
@@ -146,6 +151,7 @@ class OperationController extends AbstractController
             $operation->setClient($op[0]->getClient());
             $operation->setCode($op[0]->getCode());
             $operation->setFrais($op[0]->getFrais());
+            $operation->setType($type);
            
             $f=$op[0]->getFrais();
             $compte->setSolde($compte->getSolde()+$operation->getMontant());

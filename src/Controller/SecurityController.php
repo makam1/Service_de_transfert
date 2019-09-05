@@ -68,4 +68,5 @@ class SecurityController extends AbstractController
 
         return new JsonResponse(['token' => $token]);
     }
+    
   }

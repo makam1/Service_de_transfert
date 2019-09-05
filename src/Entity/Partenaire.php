@@ -30,7 +30,7 @@ class Partenaire
     private $id;
 
     /**
-     * @Groups({"partenaires"})
+     * @Groups({"partenaires","users"})
      * @ORM\Column(type="string", length=30)
      * @Assert\NotBlank(message="Ce champ ne doit pas être vide")
      * @Assert\Length(min="7",minMessage="La longueur minimale de la raison sociale est de 7",max="30",maxMessage="La longueur maximale la raison sociale est de 30")
@@ -41,6 +41,7 @@ class Partenaire
     private $raisonsociale;
 
     /**
+     * 
      * @Groups({"partenaires"})
      * @ORM\Column(type="string", length=10, unique=true)
      * @Assert\NotBlank(message="Ce champ ne doit pas être vide")
@@ -62,18 +63,19 @@ class Partenaire
     private $adresse;
 
     /**
-     * @Groups({"partenaires"})
+     * 
      * @ORM\OneToMany(targetEntity="App\Entity\Utilisateur", mappedBy="partenaire")
      */
     private $utilisateurs;
 
     /**
-     * @Groups({"partenaires"})
+     * 
      * @ORM\OneToMany(targetEntity="App\Entity\Compte", mappedBy="partenaire")
      */
     private $comptes;
 
     /**
+     *
      * @Groups({"partenaires"})
      * @ORM\Column(type="string", length=255)
      */

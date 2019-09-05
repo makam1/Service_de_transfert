@@ -23,6 +23,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Utilisateur implements UserInterface
 {
     /**
+     * @Groups({"users"})
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -99,6 +100,7 @@ class Utilisateur implements UserInterface
     private $statut;
 
     /**
+     * @Groups({"users"})
      * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire", inversedBy="utilisateurs")
      */
     private $partenaire;
@@ -123,6 +125,7 @@ class Utilisateur implements UserInterface
     private $updatedAt;
 
     /**
+     * @Groups({"users"})
      * @ORM\ManyToOne(targetEntity="App\Entity\Compte", inversedBy="utilisateur")
      */
     private $compte;

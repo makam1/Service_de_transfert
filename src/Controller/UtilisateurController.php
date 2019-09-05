@@ -2,10 +2,12 @@
 namespace App\Controller;
 
 use App\Entity\Compte;
+use App\Entity\Partenaire;
 use App\Entity\Utilisateur;
 use App\Form\UtilisateurType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\UtilisateurRepository;
+use App\Repository\PartenaireRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -27,7 +29,12 @@ class UtilisateurController extends AbstractController
      */
     public function index(UtilisateurRepository $user,SerializerInterface $serializer): Response
     {
-        $part=$user->findAll();
+        $id=$this->getUser()->getPartenaire()->getId();
+        if($this->getUser()->getUsername()=='makam12'){
+        $part=$this->getDoctrine()->getRepository(Utilisateur::class)->findBy(array('roles'=>"ROLE_ADMIN"));
+        }else{
+        $part=$this->getDoctrine()->getRepository(Utilisateur::class)->findBy(array('partenaire'=>$id));
+        }
         $data = $serializer->serialize($part, 'json',['groups' => ['users']]);
         return new Response($data, 200, [
             'Content-Type'=>  'application/json'
@@ -53,7 +60,7 @@ class UtilisateurController extends AbstractController
     
             $utilisateur->setRoles(["ROLE_SUPERADMIN"]);
     
-            $hash = $encoder->encodePassword($utilisateur, $utilisateur->getPassword());
+            $hash = $passwordEncoder->encodePassword($utilisateur, $utilisateur->getPassword());
             $utilisateur->setPassword($hash);
             $utilisateur->setStatut("actif");
             $utilisateur->setPartenaire($id);
@@ -71,7 +78,6 @@ class UtilisateurController extends AbstractController
             $entityManager->flush();
     
             return new Response('Super admin ajouté', Response::HTTP_CREATED);
-
 
     }
      

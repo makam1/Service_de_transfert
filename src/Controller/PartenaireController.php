@@ -49,9 +49,9 @@ class PartenaireController extends AbstractController
 
         return new JsonResponse($data, 200, [
             'Content-Type'=>  'application/json'
-        ]);
-        
+        ]);  
     }
+    
     /**
      * @Route("/liste", name="partenaire_index", methods={"GET"})
      *  
