@@ -143,7 +143,7 @@ class OperationController extends AbstractController
             return new Response('Cet envoi a déja été retiré', Response::HTTP_CREATED);
 
         }else{
-            var_dump($op[0]->getMontant());
+            
             $client =$this->getDoctrine()->getRepository(Client::class)->findBy(array('id'=>$op[0]->getClient()));
             $operation->setDate(new \Datetime());
             $operation->setUtilisateur($id);

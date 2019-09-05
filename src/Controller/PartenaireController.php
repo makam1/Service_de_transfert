@@ -166,19 +166,19 @@ class PartenaireController extends AbstractController
      */
     public function bloquer(Request $request, Partenaire $partenaire): Response
     {
+
+        if($partenaire->getRaisonsociale()=='système'){
+            return new Response('Vous ne pouvez pas bloquer le système', Response::HTTP_CREATED);
+        }
+        if($partenaire->getStatut()=='actif'){
         $partenaire->setStatut('bloqué');
         $this->getDoctrine()->getManager()->flush();
         return new Response('Partenaire bloqué', Response::HTTP_CREATED);
-    
-    }
-    /**
-     * @Route("/{id}/activer", name="activer", methods={"GET","POST"})
-     */
-    public function activer(Request $request, Partenaire $partenaire): Response
-    {
-        $partenaire->setStatut('actif');
+        } else{
+            $partenaire->setStatut('actif');
         $this->getDoctrine()->getManager()->flush();
         return new Response('Partenaire débloqué', Response::HTTP_CREATED);
+        } 
     
     }
    

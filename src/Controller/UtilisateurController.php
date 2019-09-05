@@ -31,7 +31,7 @@ class UtilisateurController extends AbstractController
     {
         $id=$this->getUser()->getPartenaire()->getId();
         if($this->getUser()->getUsername()=='makam12'){
-        $part=$this->getDoctrine()->getRepository(Utilisateur::class)->findBy(array('roles'=>"ROLE_ADMIN"));
+        $part=$this->getDoctrine()->getRepository(Utilisateur::class)->findBy(array('statut'=>"actif"));
         }else{
         $part=$this->getDoctrine()->getRepository(Utilisateur::class)->findBy(array('partenaire'=>$id));
         }

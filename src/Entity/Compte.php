@@ -18,6 +18,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Compte
 {
     /**
+     * @Groups({"users"})
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
