@@ -35,16 +35,15 @@ class SecurityController extends AbstractController
     $this->passwordEncoder = $passwordEncoder;
     }
         /**
-     *@Route("/login_check", name="connexion", methods={"POST"})
+     *@Route("/login", name="connexion", methods={"POST"})
      * @return JsonResponse
      * @param Request $request
-     * @param JWTEncoderInterface $JWTEncoder
-     * @throws \Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException
      */
 
-    public function login_check(Request $request, JWTEncoderInterface $JWTEncoder)
+    public function login(Request $request, JWTEncoderInterface $JWTEncoder)
     {
         $user = $this->getUser();
+
        
         $isValid =$this->passwordEncoder;
         if (!$isValid) {
@@ -61,11 +60,10 @@ class SecurityController extends AbstractController
         
         $token = $JWTEncoder->encode([
                 'roles'=>$user->getRoles(),
-                'id'=>$user->getId(),
+                'statut'=>$user->getStatut(),
                 'username' => $user->getUsername(),
                 'exp' => time() + 36000 // 1 hour expiration
             ]);
-
         return new JsonResponse(['token' => $token]);
     }
     

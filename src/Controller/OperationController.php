@@ -10,11 +10,13 @@ use App\Entity\Operation;
 use App\Entity\Commission;
 use App\Form\OperationType;
 use App\Form\CommissionType;
+use App\Repository\ClientRepository;
 use App\Repository\OperationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -180,9 +182,7 @@ class OperationController extends AbstractController
             $entityManager->flush();
 
             return new Response('Retrait effectué avec succés', Response::HTTP_CREATED);
-        
             }
-
         }
 
     }
@@ -216,5 +216,7 @@ class OperationController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+    
 
 }

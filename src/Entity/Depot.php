@@ -6,6 +6,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 /**
  * @ApiResource()
@@ -21,6 +23,7 @@ class Depot
     private $id;
 
     /**
+     * @Groups({"depots"})
      * @ORM\Column(type="integer")
      * @Assert\NotBlank(message="Renseignez le montant")
      * @Assert\Range(min="75000",minMessage="Le dépôt minimum est de {{ limit }}")
@@ -32,11 +35,13 @@ class Depot
     private $montant;
 
     /**
+     * @Groups({"depots"})
      * @ORM\Column(type="datetime")
      */
     private $date;
 
     /**
+     * @Groups({"depots"})
      * @ORM\ManyToOne(targetEntity="App\Entity\Compte", inversedBy="depots")
      * @Assert\NotBlank(message="Renseignez le compte")
      * @ORM\JoinColumn(nullable=false)

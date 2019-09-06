@@ -20,12 +20,14 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class DepotController extends AbstractController
 {
     /**
-     * @Route("/", name="depot_index", methods={"GET"})
+     * @Route("/liste", name="depot_liste", methods={"GET"})
      */
-    public function index(DepotRepository $depotRepository): Response
+    public function liste(DepotRepository $depotRepository,SerializerInterface $serializer): Response
     {
-        return $this->render('depot/index.html.twig', [
-            'depots' => $depotRepository->findAll(),
+        $depots=$depotRepository->findAll();
+        $data = $serializer->serialize($depots, 'json',['groups' => ['depots']]);
+        return new Response($data, 200, [
+            'Content-Type'=>  'application/json'
         ]);
     }
     /**

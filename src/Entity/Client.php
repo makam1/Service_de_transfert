@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 /**
  * @ApiResource()
@@ -19,41 +21,49 @@ class Client
     private $id;
 
     /**
+     * @Groups({"clients"})
      * @ORM\Column(type="string", length=255)
      */
     private $nomenvoyeur;
 
     /**
+     * @Groups({"clients"})
      * @ORM\Column(type="string", length=255)
      */
     private $prenomenvoyeur;
 
     /**
+     * @Groups({"clients"})
      * @ORM\Column(type="integer")
      */
     private $telephoneenvoyeur;
 
     /**
+     * @Groups({"clients"})
      * @ORM\Column(type="integer")
      */
     private $ncienvoyeur;
 
     /**
+     * @Groups({"clients"})
      * @ORM\Column(type="string", length=255)
      */
     private $nombeneficiaire;
 
     /**
+     * @Groups({"clients"})
      * @ORM\Column(type="string", length=255)
      */
     private $prenombeneficiaire;
 
     /**
+     * @Groups({"clients"})
      * @ORM\Column(type="integer")
      */
     private $telephonebeneficiaire;
 
     /**
+     * @Groups({"clients"})
      * @ORM\Column(type="integer", nullable=true)
      */
     private $ncibeneficiaire;

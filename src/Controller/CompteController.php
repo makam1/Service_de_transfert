@@ -22,7 +22,24 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class CompteController extends AbstractController
 {
-    
+    /**
+     * @Route("/liste", name="compte_liste", methods={"GET"})
+     *  
+     */
+    public function liste(CompteRepository $compte,SerializerInterface $serializer): Response
+    {
+        $id=$this->getUser()->getPartenaire()->getId();
+        if($this->getUser()->getPartenaire()->getRaisonsociale()=='système'){
+        $compte=$this->getDoctrine()->getRepository(Compte::class)->findAll();
+        }else{
+        $compte=$this->getDoctrine()->getRepository(Compte::class)->findBy(array('partenaire'=>$id));
+        }
+        $data = $serializer->serialize($compte, 'json',['groups' => ['comptes']]);
+        return new Response($data, 200, [
+            'Content-Type'=>  'application/json'
+        ]);
+        
+    }
     /**
      * @Route("/new", name="comptenew", methods={"GET","POST"})
      */

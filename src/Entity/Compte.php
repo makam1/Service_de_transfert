@@ -26,13 +26,13 @@ class Compte
     private $id;
 
     /**
-     * @Groups({"users"})
+     * @Groups({"users","comptes","depots"})
      * @ORM\Column(type="string", length=255)
      */
     private $numerocompte;
 
     /**
-     * @Groups({"users"})
+     * @Groups({"users","comptes"})
      * @ORM\Column(type="integer")
      */
     private $solde;
@@ -51,6 +51,7 @@ class Compte
     private $partenaire;
 
     /**
+     * @Groups({"comptes"})
      * @ORM\OneToMany(targetEntity="App\Entity\Utilisateur", mappedBy="compte")
      */
     private $utilisateur;

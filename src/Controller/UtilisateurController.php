@@ -4,10 +4,12 @@ namespace App\Controller;
 use App\Entity\Compte;
 use App\Entity\Partenaire;
 use App\Entity\Utilisateur;
+use App\Entity\Client;
 use App\Form\UtilisateurType;
+use App\Repository\ClientRepository;
+use App\Repository\PartenaireRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\UtilisateurRepository;
-use App\Repository\PartenaireRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -225,8 +227,8 @@ class UtilisateurController extends AbstractController
     }
     
     /**
-     * @Route("/{id}/user/compte", name="utilisateur_edit", methods={"GET","POST"})
-     */
+    * @Route("/{id}/user/compte", name="utilisateur_edit", methods={"GET","POST"})
+    */
     public function compte(Request $request, Utilisateur $utilisateur): Response
     {
         $compte=$utilisateur->getPartenaire()->getComptes()[0];
@@ -234,4 +236,6 @@ class UtilisateurController extends AbstractController
         $this->getDoctrine()->getManager()->flush();
         return new Response('Le compte a été affecté à l\'utilisateur', Response::HTTP_CREATED);
     }
+
+
 }

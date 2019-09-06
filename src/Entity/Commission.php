@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 /**
  * @ApiResource()
@@ -19,16 +21,19 @@ class Commission
     private $id;
 
     /**
+     *  @Groups({"coms"})
      * @ORM\Column(type="integer")
      */
     private $etat;
 
     /**
+     * @Groups({"coms"})
      * @ORM\Column(type="integer")
      */
     private $systeme;
 
     /**
+     * @Groups({"coms"})
      * @ORM\Column(type="integer")
      */
     private $partenaire;
