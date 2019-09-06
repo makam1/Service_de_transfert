@@ -33,6 +33,7 @@ class DepotController extends AbstractController
     /**
      * @Route("/new", name="depot_new", methods={"GET","POST"})
      */
+
     public function new(Request $request,SerializerInterface $serializer,EntityManagerInterface $entityManager,ValidatorInterface $validator ): Response
     {
         $depot = new Depot();
@@ -74,6 +75,7 @@ class DepotController extends AbstractController
             'depot' => $depot,
         ]);
     }
+    
     /**
      * @Route("/{id}/edit", name="depot_edit", methods={"GET","POST"})
      */

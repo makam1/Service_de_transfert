@@ -133,17 +133,16 @@ class OperationController extends AbstractController
         $data=$request->request->all();
         $form->handleRequest($request);
         $form->submit($data);
+
         $op=$this->getDoctrine()->getRepository(Operation::class)->findBy(array('code'=>$operation->getCode()));
 
         if($op==null){
             return new Response('Ce code est erroné, veuillez réessayer', Response::HTTP_CREATED);
-
         }else{
             
 
         if(count($op)>1){
             return new Response('Cet envoi a déja été retiré', Response::HTTP_CREATED);
-
         }else{
             
             $client =$this->getDoctrine()->getRepository(Client::class)->findBy(array('id'=>$op[0]->getClient()));
@@ -217,6 +216,5 @@ class OperationController extends AbstractController
         ]);
     }
 
-    
 
 }
