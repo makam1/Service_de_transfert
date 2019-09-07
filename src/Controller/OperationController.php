@@ -43,6 +43,7 @@ class OperationController extends AbstractController
         $user=$this->getUser();
         $id=$this->getUser()->getId();
         $part=$this->getUser()->getPartenaire()->getId();
+        $partenaire=$this->getUser()->getPartenaire();
         $compte= $user->getCompte();
         
         $type=$this->getDoctrine()->getRepository(Type::class)->findOneBy(array('libelle'=>'envoi'));
@@ -52,6 +53,7 @@ class OperationController extends AbstractController
         $client = new Client();
         $form = $this->createForm(ClientType::class, $client);
         $client->setNcibeneficiaire(1) ;
+        $client->setPartanaire($partenaire) ;
         $form->handleRequest($request);
         $data=$request->request->all();
         $form->submit($data);
@@ -100,8 +102,8 @@ class OperationController extends AbstractController
         $commission->setSysteme(($f*30)/100);
         $commission->setPartenaire(($f*20)/100);
         $commission->setOperation($operation);
+        $commission->setUtilisateur($partenaire);
         $entityManager = $this->getDoctrine()->getManager();
-        
         $entityManager->persist($commission);
         $entityManager->persist($client);
         $entityManager->persist($operation);
@@ -126,6 +128,7 @@ class OperationController extends AbstractController
     {
         $id=$this->getUser();
         $type=$this->getDoctrine()->getRepository(Type::class)->findOneBy(array('libelle'=>'retrait'));
+        $partenaire=$this->getUser()->getPartenaire();
 
         $compte= $this->getUser()->getCompte();
         $operation = new Operation();
@@ -164,6 +167,7 @@ class OperationController extends AbstractController
             $commission->setEtat(0);
             $commission->setSysteme(0);
             $commission->setPartenaire(($f*10)/100);
+            $commission->setUtilisateur($partenaire);
             $commission->setOperation($operation);
             $entityManager = $this->getDoctrine()->getManager();
 
@@ -171,12 +175,21 @@ class OperationController extends AbstractController
             $form2= $this->createForm(ClientType::class, $cl);
             $form2->handleRequest($request);
             $form2->submit($data);
-            $client[0]->setNcibeneficiaire($cl->getNcibeneficiaire());
+            $cl->setPartanaire($partenaire);
+            $cl->setNomenvoyeur($client[0]->getNomenvoyeur());
+            $cl->setPrenomenvoyeur($client[0]->getPrenomenvoyeur());
+            $cl->setTelephoneenvoyeur($client[0]->getTelephoneenvoyeur());
+            $cl->setNcienvoyeur($client[0]->getNcienvoyeur());
+            $cl->setNombeneficiaire($client[0]->getNombeneficiaire());
+            $cl->setPrenombeneficiaire($client[0]->getPrenombeneficiaire());
+            $cl->setTelephonebeneficiaire($client[0]->getTelephonebeneficiaire());
+            $cl->setNcibeneficiaire($cl->getNcibeneficiaire());
 
-        
             $entityManager->persist($commission);
 
             $entityManager->persist($operation);
+            $entityManager->persist($cl);
+
     
             $entityManager->flush();
 

@@ -44,6 +44,12 @@ class Commission
      */
     private $operation;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire", inversedBy="commissions")
+     */
+    private $utilisateur;
+
+   
     public function getId(): ?int
     {
         return $this->id;
@@ -96,4 +102,17 @@ class Commission
 
         return $this;
     }
+
+    public function getUtilisateur(): ?Partenaire
+    {
+        return $this->utilisateur;
+    }
+
+    public function setUtilisateur(?Partenaire $utilisateur): self
+    {
+        $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+
 }

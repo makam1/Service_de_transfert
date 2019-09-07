@@ -33,14 +33,20 @@ class UtilisateurController extends AbstractController
     {
         $id=$this->getUser()->getPartenaire()->getId();
         if($this->getUser()->getUsername()=='makam12'){
-        $part=$this->getDoctrine()->getRepository(Utilisateur::class)->findBy(array('statut'=>"actif"));
-        }else{
-        $part=$this->getDoctrine()->getRepository(Utilisateur::class)->findBy(array('partenaire'=>$id));
-        }
+        $query = $this->getDoctrine()->getEntityManager()->createQuery('SELECT u FROM App:Utilisateur u WHERE u.roles NOT LIKE :role')->setParameter('role','%"ROLE_USER"%');
+        $part = $query->getResult();   
         $data = $serializer->serialize($part, 'json',['groups' => ['users']]);
         return new Response($data, 200, [
             'Content-Type'=>  'application/json'
         ]);
+          
+        }else{
+        $part3=$this->getDoctrine()->getRepository(Utilisateur::class)->findBy(array('partenaire'=>$id));
+        $data3 = $serializer->serialize($part3, 'json',['groups' => ['users']]);
+        return new Response($data3, 200, [
+            'Content-Type'=>  'application/json'
+        ]);
+        }
         
     }
         /**

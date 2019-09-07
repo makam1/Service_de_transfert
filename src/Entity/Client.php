@@ -68,6 +68,11 @@ class Client
      */
     private $ncibeneficiaire;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire", inversedBy="clients")
+     */
+    private $partanaire;
+
     
     public function getId(): ?int
     {
@@ -166,6 +171,18 @@ class Client
     public function setNcibeneficiaire(?int $ncibeneficiaire): self
     {
         $this->ncibeneficiaire = $ncibeneficiaire;
+
+        return $this;
+    }
+
+    public function getPartanaire(): ?Partenaire
+    {
+        return $this->partanaire;
+    }
+
+    public function setPartanaire(?Partenaire $partanaire): self
+    {
+        $this->partanaire = $partanaire;
 
         return $this;
     }

@@ -58,8 +58,8 @@ class PartenaireController extends AbstractController
      */
     public function liste(PartenaireRepository $user,SerializerInterface $serializer): Response
     {
+        
         $part=$this->getDoctrine()->getRepository(Partenaire::class)->findAll();
-
         $data = $serializer->serialize($part, 'json',['groups' => ['partenaires']]);
         return new Response($data, 200, [
             'Content-Type'=>  'application/json'

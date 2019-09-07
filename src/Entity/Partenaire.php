@@ -81,10 +81,24 @@ class Partenaire
      */
     private $statut;
 
+   
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Client", mappedBy="partanaire")
+     */
+    private $clients;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Commission", mappedBy="utilisateur")
+     */
+    private $commissions;
+
     public function __construct()
     {
         $this->utilisateurs = new ArrayCollection();
         $this->comptes = new ArrayCollection();
+        $this->commissions = new ArrayCollection();
+        $this->clients = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -198,6 +212,70 @@ class Partenaire
     public function setStatut(string $statut): self
     {
         $this->statut = $statut;
+
+        return $this;
+    }
+
+    
+
+    /**
+     * @return Collection|Client[]
+     */
+    public function getClients(): Collection
+    {
+        return $this->clients;
+    }
+
+    public function addClient(Client $client): self
+    {
+        if (!$this->clients->contains($client)) {
+            $this->clients[] = $client;
+            $client->setPartanaire($this);
+        }
+
+        return $this;
+    }
+
+    public function removeClient(Client $client): self
+    {
+        if ($this->clients->contains($client)) {
+            $this->clients->removeElement($client);
+            // set the owning side to null (unless already changed)
+            if ($client->getPartanaire() === $this) {
+                $client->setPartanaire(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Commission[]
+     */
+    public function getCommissions(): Collection
+    {
+        return $this->commissions;
+    }
+
+    public function addCommission(Commission $commission): self
+    {
+        if (!$this->commissions->contains($commission)) {
+            $this->commissions[] = $commission;
+            $commission->setUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommission(Commission $commission): self
+    {
+        if ($this->commissions->contains($commission)) {
+            $this->commissions->removeElement($commission);
+            // set the owning side to null (unless already changed)
+            if ($commission->getUtilisateur() === $this) {
+                $commission->setUtilisateur(null);
+            }
+        }
 
         return $this;
     }

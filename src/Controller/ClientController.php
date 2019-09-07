@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Client;
 use App\Entity\Operation;
+use App\Entity\Commission;
 use App\Form\OperationType;
 use App\Repository\ClientRepository;
 use App\Repository\CommissionRepository;
@@ -25,7 +26,8 @@ class ClientController extends AbstractController
      */
     public function liste(ClientRepository $clientRepository,SerializerInterface $serializer): Response
     {
-        $clients=$clientRepository->findAll();
+        $id=$this->getUser()->getPartenaire()->getId();
+        $clients=$this->getDoctrine()->getRepository(Client::class)->findBy(array('partanaire'=>$id));
         $data = $serializer->serialize($clients, 'json',['groups' => ['clients']]);
         return new Response($data, 200, [
             'Content-Type'=>  'application/json'
@@ -37,13 +39,16 @@ class ClientController extends AbstractController
      */
     public function commission(CommissionRepository $com,SerializerInterface $serializer): Response
     {
-        $clients=$com->findAll();
-        $data = $serializer->serialize($clients, 'json',['groups' => ['coms']]);
+
+        $id=$this->getUser()->getPartenaire()->getId();
+        $comm=$this->getDoctrine()->getRepository(Commission::class)->findBy(array('utilisateur'=>$id));
+        $data = $serializer->serialize($comm, 'json',['groups' => ['coms']]);
         return new Response($data, 200, [
             'Content-Type'=>  'application/json'
         ]);
     }
     
+
     /**
      * @Route("info", name="info", methods={"GET","POST"})
      */
@@ -67,6 +72,8 @@ class ClientController extends AbstractController
 
             }else{
                 $clients =$this->getDoctrine()->getRepository(Client::class)->findBy(array('id'=>$op[0]->getClient()));
+                $montant =$op[0]->getMontant();
+
                 $data = $serializer->serialize($clients, 'json',['groups' => ['clients']]);
                 return new Response($data, 200, [
                 'Content-Type'=>  'application/json'
