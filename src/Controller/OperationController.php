@@ -38,7 +38,7 @@ class OperationController extends AbstractController
     /**
      * @Route("/envoi", name="operation_envoi", methods={"GET","POST"})
      */
-    public function envoi(Request $request,EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
+    public function envoi(Request $request,EntityManagerInterface $entityManager, ValidatorInterface $validator,SerializerInterface $serializer): Response
     {
         $user=$this->getUser();
         $id=$this->getUser()->getId();
@@ -48,24 +48,24 @@ class OperationController extends AbstractController
         
         $type=$this->getDoctrine()->getRepository(Type::class)->findOneBy(array('libelle'=>'envoi'));
 
+        $operation = new Operation();
+        $form1 = $this->createForm(OperationType::class, $operation);
+        $form1->handleRequest($request);
+        $data=$request->request->all();
+        $form1->submit($data);
+        $montant=$operation->getMontant();
+
 
         if($compte->getSolde()>=10000){
         $client = new Client();
         $form = $this->createForm(ClientType::class, $client);
         $client->setNcibeneficiaire(1) ;
         $client->setPartanaire($partenaire) ;
+        $client->setMontant($montant) ;
         $form->handleRequest($request);
-        $data=$request->request->all();
         $form->submit($data);
 
        
-       
-        $operation = new Operation();
-        $form1 = $this->createForm(OperationType::class, $operation);
-        $form1->handleRequest($request);
-        $form1->submit($data);
-        $montant=$operation->getMontant();
-
         if($montant<=$compte->getSolde() && $montant>500){
 
         $frais=$this->getDoctrine()->getRepository(Frais::class)->findAll();
@@ -103,6 +103,22 @@ class OperationController extends AbstractController
         $commission->setPartenaire(($f*20)/100);
         $commission->setOperation($operation);
         $commission->setUtilisateur($partenaire);
+
+        $errors = $validator->validate($client);
+            if(count($errors)) {
+                $errors = $serializer->serialize($errors, 'json');
+                return new Response($errors, 500, [
+                    'Content-Type' => 'application/json'
+                ]);
+            }
+            $m = $validator->validate($operation);
+            if(count($m)) {
+                $m = $serializer->serialize($m, 'json');
+                return new Response($m, 500, [
+                    'Content-Type'=>  'application/json'
+                ]);
+            }
+
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($commission);
         $entityManager->persist($client);
@@ -113,8 +129,8 @@ class OperationController extends AbstractController
             return new Response('Vous ne pouvez pas effectuer cet envoi', Response::HTTP_CREATED);
 
         }
-
-        return new Response('Envoi reussi le code est :'.$code, Response::HTTP_CREATED);
+        $info=" les frais d'envoi: ".$f." le code d'envoi: ".$code;
+        return new Response('Envoi reussi'.$info, Response::HTTP_CREATED);
         }else{
             return new Response('Vous ne pouvez pas faire d\'envoi le solde de votre compte est bas', Response::HTTP_CREATED);
 
@@ -138,7 +154,6 @@ class OperationController extends AbstractController
         $form->submit($data);
 
         $op=$this->getDoctrine()->getRepository(Operation::class)->findBy(array('code'=>$operation->getCode()));
-
         if($op==null){
             return new Response('Ce code est erroné, veuillez réessayer', Response::HTTP_CREATED);
         }else{
@@ -184,6 +199,8 @@ class OperationController extends AbstractController
             $cl->setPrenombeneficiaire($client[0]->getPrenombeneficiaire());
             $cl->setTelephonebeneficiaire($client[0]->getTelephonebeneficiaire());
             $cl->setNcibeneficiaire($cl->getNcibeneficiaire());
+            $cl->setMontant($op[0]->getMontant()) ;
+
 
             $entityManager->persist($commission);
 

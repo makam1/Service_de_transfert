@@ -2,9 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Depot;
 use App\Entity\Client;
+use App\Entity\Compte;
+use App\Form\DepotType;
 use App\Entity\Operation;
 use App\Entity\Commission;
+use App\Form\RecDepotType;
+use App\Entity\Utilisateur;
 use App\Form\OperationType;
 use App\Repository\ClientRepository;
 use App\Repository\CommissionRepository;
@@ -71,14 +76,42 @@ class ClientController extends AbstractController
                 return new Response('Cet envoi a déja été retiré', Response::HTTP_CREATED);
 
             }else{
-                $clients =$this->getDoctrine()->getRepository(Client::class)->findBy(array('id'=>$op[0]->getClient()));
                 $montant =$op[0]->getMontant();
-
+                $clients =$this->getDoctrine()->getRepository(Client::class)->findBy(array('id'=>$op[0]->getClient()));
+                
                 $data = $serializer->serialize($clients, 'json',['groups' => ['clients']]);
                 return new Response($data, 200, [
                 'Content-Type'=>  'application/json'
                 ]);
             }
+        }
+    }
+
+    /**
+     * @Route("depot/recherche", name="depot", methods={"GET","POST"})
+     */
+    public function recherche(Request $request,SerializerInterface $serializer): Response
+    {
+        $depot = new Depot();
+        $form = $this->createForm(RecDepotType::class, $depot);
+        $data=$request->request->all();
+        $form->handleRequest($request);
+        $depot->setMontant(1);
+        $form->submit($data);
+        
+
+        $num=$this->getDoctrine()->getRepository(Compte::class)->findOneBy(array('numerocompte'=>$depot->getNumerocompte()));
+        if($num==null){
+            return new Response('Ce compte n\'existe pas', Response::HTTP_CREATED);
+
+        }else{  
+
+            $user =$this->getDoctrine()->getRepository(Utilisateur::class)->findBy(array('compte'=>$num->getId()));
+            
+            $data = $serializer->serialize($user, 'json',['groups' => ['users']]);
+            return new Response($data, 200, [
+            'Content-Type'=>  'application/json'
+            ]);
         }
     }
 }

@@ -37,13 +37,14 @@ class DepotController extends AbstractController
     public function new(Request $request,SerializerInterface $serializer,EntityManagerInterface $entityManager,ValidatorInterface $validator ): Response
     {
         $depot = new Depot();
-      
         $form = $this->createForm(DepotType::class,$depot);
         $data=$request->request->all();
         $depot->setDate(new \Datetime());
-       
         $form->submit($data);
+
+        $num=$this->getDoctrine()->getRepository(Compte::class)->findOneBy(array('numerocompte'=>$depot->getNumerocompte()));
         if($form->isSubmitted()){
+            $depot->setCompte($num);
             $compte= $depot->getCompte();
             $compte->setSolde($compte->getSolde()+$depot->getMontant());
             $entityManager = $this->getDoctrine()->getManager();

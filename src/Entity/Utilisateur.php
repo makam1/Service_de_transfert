@@ -31,7 +31,7 @@ class Utilisateur implements UserInterface
     private $id;
 
     /**
-     *  @Groups({"users"})
+     *  @Groups({"users","comptes"})
      * @ORM\Column(type="string", length=10)
      * @Assert\NotBlank(message="Renseigner le username")
      * @Assert\Length(min="5",minMessage="La longueur du username est de 5",max="10",maxMessage="La longueur du username est de 10")
@@ -73,7 +73,7 @@ class Utilisateur implements UserInterface
      * @Groups({"users"})
      * @ORM\Column(type="string", length=40)
      * @Assert\NotBlank(message="Renseignez l'email")
-     * @Assert\Length(min="10",minMessage="L'email' doit etre long 10 caractères minimum",max="20",maxMessage="L'email' doit etre long 20 caractères maximum")
+     * @Assert\Length(min="10",minMessage="L'email' doit etre long 10 caractères minimum",max="40",maxMessage="L'email' doit etre long 40 caractères maximum")
     *@Assert\Type(
      *     type="string",
      *     message="Donner un email valide")

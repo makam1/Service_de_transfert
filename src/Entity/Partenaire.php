@@ -30,7 +30,7 @@ class Partenaire
     private $id;
 
     /**
-     * @Groups({"partenaires","users"})
+     * @Groups({"partenaires","users","comptes"})
      * @ORM\Column(type="string", length=30)
      * @Assert\NotBlank(message="Ce champ ne doit pas être vide")
      * @Assert\Length(min="7",minMessage="La longueur minimale de la raison sociale est de 7",max="30",maxMessage="La longueur maximale la raison sociale est de 30")

@@ -56,7 +56,7 @@ class UtilisateurController extends AbstractController
         public function creer(Request $request,UserPasswordEncoderInterface $passwordEncoder,EntityManagerInterface $entityManager, ValidatorInterface $validator,SerializerInterface $serializer){
     
             $utilisateur = new Utilisateur();
-
+            $compte=$this->getUser()->getCompte();
             $id=$this->getUser()->getPartenaire();
     
             $form = $this->createForm(UtilisateurType::class, $utilisateur);
@@ -72,6 +72,7 @@ class UtilisateurController extends AbstractController
             $utilisateur->setPassword($hash);
             $utilisateur->setStatut("actif");
             $utilisateur->setPartenaire($id);
+            $utilisateur->setCompte($compte);
             $utilisateur->setImageFile($file);
             $utilisateur->setUpdatedAt(new \DateTime); 
             $entityManager = $this->getDoctrine()->getManager();
@@ -107,13 +108,14 @@ class UtilisateurController extends AbstractController
         $file=$request->files->all()['imageFile'];
         
         $form->submit($data);
-
+        $compte=$this->getDoctrine()->getRepository(Compte::class)->findBy(array('numerocompte'=>'Non alloué'));
         $utilisateur->setRoles(["ROLE_ADMIN"]);
 
         $hash = $encoder->encodePassword($utilisateur, $utilisateur->getPassword());
         $utilisateur->setPassword($hash);
         $utilisateur->setStatut("actif");
         $utilisateur->setPartenaire($id);
+        $utilisateur->setCompte($compte[0]);
         $utilisateur->setImageFile($file);
         $utilisateur->setUpdatedAt(new \DateTime); 
         $entityManager = $this->getDoctrine()->getManager();
@@ -144,6 +146,7 @@ class UtilisateurController extends AbstractController
         $form->submit($data);
         
         $id=$this->getUser()->getPartenaire();
+        $compte=$this->getDoctrine()->getRepository(Compte::class)->findBy(array('numerocompte'=>'Non alloué'));
 
         $utilisateur->setRoles(["ROLE_USER"]);
         $hash = $encoder->encodePassword($utilisateur, $utilisateur->getPassword());
@@ -152,6 +155,7 @@ class UtilisateurController extends AbstractController
         $utilisateur->setUpdatedAt(new \DateTime);
         $utilisateur->setStatut("actif");
         $utilisateur->setPartenaire($id);
+        $utilisateur->setCompte($compte[0]);
         $entityManager = $this->getDoctrine()->getManager();
         $errors = $validator->validate($utilisateur);
             if(count($errors)) {
@@ -178,6 +182,7 @@ class UtilisateurController extends AbstractController
         $form = $this->createForm(UtilisateurType::class, $utilisateur);
         $form->handleRequest($request);
         $id=$this->getUser()->getPartenaire();
+        $compte=$this->getUser()->getCompte();
 
         $data=$request->request->all();
         $file=$request->files->all()['imageFile'];
@@ -187,6 +192,7 @@ class UtilisateurController extends AbstractController
         $utilisateur->setPassword($hash);
         $utilisateur->setStatut("actif");
         $utilisateur->setPartenaire($id);
+        $utilisateur->setCompte($compte);
         $utilisateur->setImageFile($file);
         $utilisateur->setUpdatedAt(new \DateTime);
         $entityManager = $this->getDoctrine()->getManager();
@@ -235,6 +241,7 @@ class UtilisateurController extends AbstractController
     /**
     * @Route("/{id}/user/compte", name="utilisateur_edit", methods={"GET","POST"})
     */
+
     public function compte(Request $request, Utilisateur $utilisateur): Response
     {
         $compte=$utilisateur->getPartenaire()->getComptes()[0];
@@ -242,6 +249,4 @@ class UtilisateurController extends AbstractController
         $this->getDoctrine()->getManager()->flush();
         return new Response('Le compte a été affecté à l\'utilisateur', Response::HTTP_CREATED);
     }
-
-
 }

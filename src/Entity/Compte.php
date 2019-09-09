@@ -43,6 +43,7 @@ class Compte
     private $depots;
 
     /**
+     * @Groups({"comptes"})
      * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire", inversedBy="comptes")
      * @ORM\JoinColumn(nullable=false)
      * @Assert\NotBlank(message="Renseignez le partenaire")

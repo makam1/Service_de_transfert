@@ -24,13 +24,10 @@ class Depot
 
     /**
      * @Groups({"depots"})
-     * @ORM\Column(type="integer")
-     * @Assert\NotBlank(message="Renseignez le montant")
+     * @ORM\Column(type="string", nullable=true)
      * @Assert\Range(min="75000",minMessage="Le dépôt minimum est de {{ limit }}")
      * @Assert\Positive
-     * @Assert\Type(
-     *     type="integer",
-     *     message="Le montant est de type integer.")
+     * 
      */
     private $montant;
 
@@ -47,6 +44,11 @@ class Depot
      * @ORM\JoinColumn(nullable=false)
      */
     private $compte;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $numerocompte;
 
     public function getId(): ?int
     {
@@ -85,6 +87,18 @@ class Depot
     public function setCompte(?Compte $compte): self
     {
         $this->compte = $compte;
+
+        return $this;
+    }
+
+    public function getNumerocompte(): ?string
+    {
+        return $this->numerocompte;
+    }
+
+    public function setNumerocompte(string $numerocompte): self
+    {
+        $this->numerocompte = $numerocompte;
 
         return $this;
     }

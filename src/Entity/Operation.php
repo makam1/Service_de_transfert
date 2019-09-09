@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
@@ -28,7 +29,8 @@ class Operation
 
     /**
      * @Groups({"listes"})
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
+     *  @Assert\NotBlank(message="Renseignez le montant")
      */
     private $montant;
 

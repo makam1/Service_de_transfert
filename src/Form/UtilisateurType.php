@@ -22,7 +22,6 @@ class UtilisateurType extends AbstractType
             ->add('nom')
             ->add('email')
             ->add('telephone')
-
             ->add('imageFile' ,VichImageType::class, [
                 'required' => false
             ]) 
