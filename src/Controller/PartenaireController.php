@@ -47,7 +47,7 @@ class PartenaireController extends AbstractController
 
         $data = $serializer->serialize($oprepo, 'json',['groups' => ['listes']]);
 
-        return new JsonResponse($data, 200, [
+        return new Response($data, 200, [
             'Content-Type'=>  'application/json'
         ]);  
     }
@@ -85,7 +85,7 @@ class PartenaireController extends AbstractController
         $form1->submit($data);
         $date=date("Y").date("m").date("d").date("H").date("i").date("s");
         $compte->setNumerocompte($date);
-        $compte->setSolde(0);
+        $compte->setSolde(5000);
         $compte->setPartenaire($partenaire);
        
 
@@ -124,8 +124,9 @@ class PartenaireController extends AbstractController
 
         $entityManager->flush();
 
-        return new Response('Partenaire, compte et admin associé ajouté', Response::HTTP_CREATED);
-
+        return new JsonResponse('Partenaire, compte et admin associé ajouté', 200, [
+            'Content-Type'=>  'application/json'
+        ]);
 
     }
 
@@ -173,11 +174,17 @@ class PartenaireController extends AbstractController
         if($partenaire->getStatut()=='actif'){
         $partenaire->setStatut('bloqué');
         $this->getDoctrine()->getManager()->flush();
-        return new Response('Partenaire bloqué', Response::HTTP_CREATED);
+        return new JsonResponse('Partenaire bloqué', 200, [
+            'Content-Type'=>  'application/json'
+        ]);
+
         } else{
             $partenaire->setStatut('actif');
         $this->getDoctrine()->getManager()->flush();
-        return new Response('Partenaire débloqué', Response::HTTP_CREATED);
+        return new JsonResponse('Partenaire débloqué', 200, [
+            'Content-Type'=>  'application/json'
+        ]);
+
         } 
     
     }

@@ -6,6 +6,7 @@ use App\Entity\Compte;
 use App\Repository\DepotRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -59,13 +60,13 @@ class DepotController extends AbstractController
             $entityManager->persist($depot);
             $entityManager->flush();
                   
-        return new Response('Le dépôt a été effectué',Response::HTTP_CREATED);
+        return new JsonResponse('Le dépôt a été effectué', 200, [
+            'Content-Type'=>  'application/json'
+            ]);
         }
-        $data = [
-            'status' => 500,
-            'message' => 'Vous devez renseigner le montant et le compte où doit être effectuer le dépot '
-        ];
-        return new Response($data, 500);
+        return new JsonResponse('Vous devez renseigner le montant et le compte où doit être effectuer le dépot ', 500, [
+            'Content-Type'=>  'application/json'
+            ]);
     }
     /**
      * @Route("/{id}", name="depot_show", methods={"GET"})
@@ -86,7 +87,9 @@ class DepotController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             $this->getDoctrine()->getManager()->flush();
-            return new Response('Le dépôt a été effectué',Response::HTTP_CREATED);
+            return new Response('Le dépôt a été effectué',200,[
+                'Content-Type'=>  'application/json'
+            ]);
         }
     }
 }

@@ -2,19 +2,22 @@
 namespace App\Controller;
 use App\Entity\Compte;
 use App\Form\CompteType;
+use App\Entity\Partenaire;
 use App\Repository\CompteRepository;
+use App\Form\RecherchePartenaireType;
 use App\Repository\PartenaireRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 
 /**
@@ -47,13 +50,16 @@ class CompteController extends AbstractController
     {
 
         $compte = new Compte();
-        $form = $this->createForm(CompteType::class,$compte);
+        $part= new Partenaire();
+        $form = $this->createForm(RecherchePartenaireType::class,$part);
         $data=$request->request->all();
         $form->submit($data);
+        $partenaire=$this->getDoctrine()->getRepository(Partenaire::class)->findOneBy(array('raisonsociale'=>$part->getRaisonsociale()));
         if($form->isSubmitted()){
             $date=date("Y").date("m").date("d").date("H").date("i").date("s");
             $compte->setNumerocompte($date);
-            $compte->setSolde(0);
+            $compte->setPartenaire($partenaire);
+            $compte->setSolde(5000);
             $entityManager = $this->getDoctrine()->getManager();
             $errors = $validator->validate($compte);
             if(count($errors)) {
@@ -65,10 +71,14 @@ class CompteController extends AbstractController
             $entityManager->persist($compte);
             $entityManager->flush();
         
-        return new Response('Le compte a été ajouté',Response::HTTP_CREATED);
+        return new JsonResponse('Le compte a été ajouté', 200, [
+            'Content-Type'=>  'application/json'
+            ]);
     }
        
-        return new Response('Vous devez renseigner les informations du compte ',Response::HTTP_CREATED );
+        return new JsonResponse('Vous devez renseigner les informations du compte ', 500, [
+            'Content-Type'=>  'application/json'
+            ]);
     }
     /**
      * @Route("/{id}", name="compte_show", methods={"GET"})

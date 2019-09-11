@@ -2,32 +2,27 @@
 
 namespace App\Form;
 
-use App\Entity\Compte;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use App\Entity\Partenaire;
+use App\Entity\Utilisateur;
 
-class CompteType extends AbstractType
+class UsernameType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-          
-            ->add('partenaire',EntityType::class,[
-                'class'=> Partenaire::class,
-                'choice_label'=> 'partenaire_id'
-            ])       
+            ->add('username')
         ;
-
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Compte::class,
+            'data_class' => Utilisateur::class,
+
         ]);
     }
 }

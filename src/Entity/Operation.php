@@ -22,7 +22,7 @@ class Operation
     private $id;
 
     /**
-     *  @Groups({"listes"})
+     *  @Groups({"listes","coms"})
      * @ORM\Column(type="datetime")
      */
     private $date;
@@ -48,7 +48,7 @@ class Operation
     private $utilisateur;
 
     /** 
-     * @Groups({"listes"})
+     * @Groups({"listes","coms"})
      * @ORM\ManyToOne(targetEntity="App\Entity\Type", inversedBy="operations")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -62,7 +62,7 @@ class Operation
     private $client;
 
     /**
-     * @Groups({"listes"})
+     * @Groups({"listes","coms"})
      * @ORM\Column(type="integer")
      */
     private $frais;

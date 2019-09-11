@@ -46,6 +46,7 @@ class Depot
     private $compte;
 
     /**
+     * @Groups({"depots"})
      * @ORM\Column(type="string", length=255)
      */
     private $numerocompte;

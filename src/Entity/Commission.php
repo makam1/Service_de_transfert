@@ -39,6 +39,7 @@ class Commission
     private $partenaire;
 
     /**
+     * @Groups({"coms"})
      * @ORM\OneToOne(targetEntity="App\Entity\Operation", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */

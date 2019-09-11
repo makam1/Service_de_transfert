@@ -25,7 +25,7 @@ class Client
      * @Groups({"clients"})
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Renseigner le nom de l'envoyeur")
-     * @Assert\Length(min="10",minMessage="La longueur du nom est de 10 lettres",max="15",maxMessage="La longueur du nom est de 15 lettres maximum")
+     * @Assert\Length(min="2",minMessage="La longueur du nom est de 2 lettres",max="15",maxMessage="La longueur du nom est de 15 lettres maximum")
      *  @Assert\Type(
      *     type="string",
      *     message="Le nom le est de type string.")
@@ -63,7 +63,7 @@ class Client
      * @Groups({"clients"})
      * @ORM\Column(type="string", length=255)
      *  @Assert\NotBlank(message="Renseigner le nom du bénéficiaire")
-     * @Assert\Length(min="10",minMessage="La longueur du nom est de 10 lettres",max="15",maxMessage="La longueur du nom est de 15 lettres maximum")
+     * @Assert\Length(min="2",minMessage="La longueur du nom est de 2 lettres",max="15",maxMessage="La longueur du nom est de 15 lettres maximum")
      *  @Assert\Type(
      *     type="string",
      *     message="Le nom le est de type string.")

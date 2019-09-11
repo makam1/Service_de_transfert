@@ -14,6 +14,7 @@ use App\Repository\ClientRepository;
 use App\Repository\OperationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -25,15 +26,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class OperationController extends AbstractController
 {
-    /**
-     * @Route("/", name="operation_index", methods={"GET"})
-     */
-    public function index(OperationRepository $operationRepository): Response
-    {
-        return $this->render('operation/index.html.twig', [
-            'operations' => $operationRepository->findAll(),
-        ]);
-    }
 
     /**
      * @Route("/envoi", name="operation_envoi", methods={"GET","POST"})
@@ -66,7 +58,7 @@ class OperationController extends AbstractController
         $form->submit($data);
 
        
-        if($montant<=$compte->getSolde() && $montant>500){
+        if($montant<=$compte->getSolde() && $montant>=500){
 
         $frais=$this->getDoctrine()->getRepository(Frais::class)->findAll();
         $f=0;
@@ -126,14 +118,18 @@ class OperationController extends AbstractController
 
         $entityManager->flush();
         }else{
-            return new Response('Vous ne pouvez pas effectuer cet envoi', Response::HTTP_CREATED);
-
+            return new Response('Le montant à envoyer doit être inférieur au solde de votre compte et supérieur à 500', 500, [
+                'Content-Type'=>  'application/json'
+            ]);
         }
         $info=" les frais d'envoi: ".$f." le code d'envoi: ".$code;
-        return new Response('Envoi reussi'.$info, Response::HTTP_CREATED);
+        return new JsonResponse('Envoi reussi'.$info,200, [
+            'Content-Type'=>  'application/json'
+        ]);
         }else{
-            return new Response('Vous ne pouvez pas faire d\'envoi le solde de votre compte est bas', Response::HTTP_CREATED);
-
+            return new JsonResponse('Vous ne pouvez pas faire d\'envoi le solde de votre compte est bas',500, [
+                'Content-Type'=>  'application/json'
+            ]);
         }
     }
 
@@ -155,12 +151,16 @@ class OperationController extends AbstractController
 
         $op=$this->getDoctrine()->getRepository(Operation::class)->findBy(array('code'=>$operation->getCode()));
         if($op==null){
-            return new Response('Ce code est erroné, veuillez réessayer', Response::HTTP_CREATED);
+            return new JsonResponse('Ce code est erroné, veuillez réessayer',500, [
+                'Content-Type'=>  'application/json'
+            ]);
         }else{
             
 
         if(count($op)>1){
-            return new Response('Cet envoi a déja été retiré', Response::HTTP_CREATED);
+            return new JsonResponse('Cet envoi a déja été retiré',500, [
+                'Content-Type'=>  'application/json'
+            ]);
         }else{
             
             $client =$this->getDoctrine()->getRepository(Client::class)->findBy(array('id'=>$op[0]->getClient()));
@@ -210,7 +210,9 @@ class OperationController extends AbstractController
     
             $entityManager->flush();
 
-            return new Response('Retrait effectué avec succés', Response::HTTP_CREATED);
+            return new JsonResponse('Retrait effectué avec succés',200, [
+                'Content-Type'=>  'application/json'
+            ]);
             }
         }
 

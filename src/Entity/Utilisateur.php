@@ -31,7 +31,7 @@ class Utilisateur implements UserInterface
     private $id;
 
     /**
-     *  @Groups({"users","comptes"})
+     *  @Groups({"users","comptes","listes"})
      * @ORM\Column(type="string", length=10)
      * @Assert\NotBlank(message="Renseigner le username")
      * @Assert\Length(min="5",minMessage="La longueur du username est de 5",max="10",maxMessage="La longueur du username est de 10")
@@ -83,12 +83,9 @@ class Utilisateur implements UserInterface
 
     /**
      * @Groups({"users"})
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string")
      * @Assert\NotBlank(message="Renseignez le téléphone")
-     * @Assert\Length(min="9",minMessage="Le téléphone doit etre long 9 caractères minimum",max="9")
-    *@Assert\Type(
-     *     type="integer",
-     *     message="Le télephone est de type integer")
+     * @Assert\Length(min="9",minMessage="Le téléphone doit comporter 9 chiffres",max="9",maxMessage="Le téléphone doit comporter 9 chiffres")
      */
     private $telephone;
 
