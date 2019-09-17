@@ -159,7 +159,6 @@ class PartenaireController extends AbstractController
         $dompdf->stream("contrat.pdf", [
             "Attachment" => false
         ]);
- 
     }
 
     /**

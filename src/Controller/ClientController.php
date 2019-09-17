@@ -90,7 +90,7 @@ class ClientController extends AbstractController
                 $clients =$this->getDoctrine()->getRepository(Client::class)->findBy(array('id'=>$op[0]->getClient()));
                 
                 $data = $serializer->serialize($clients, 'json',['groups' => ['clients']]);
-                return new JsonResponse($data, 200, [
+                return new Response($data, 200, [
                 'Content-Type'=>  'application/json'
                 ]);
             }
